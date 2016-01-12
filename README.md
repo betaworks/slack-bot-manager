@@ -6,9 +6,9 @@ Slack Bot Manager is a Ruby gem that allows for the management of multiple Slack
 
 ## Installation
 
-While this has yet to be compiled to a Ruby gem, it can be installed locally via bundler inside your Gemfile:
+While this has yet to be compiled to a Ruby gem, it can be installed from this repository within your Gemfile:
 
-`gem 'slack-bot-manager', path: 'path/to/slack-bot-manager`
+`gem 'slack-bot-manager', github: 'betaworks/slack-bot-manager', branch: 'master'`
 
 __**This gem requires `redis` for tracking the status of tokens.**__
 You will need to have `redis` running for this gem to work.
