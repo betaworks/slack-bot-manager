@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.summary = 'Slack RealTime API client connection manager.'
 
   s.add_dependency 'slack-ruby-client', '>=0.5.1'
+  s.add_dependency 'faye-websocket', '>=0.10.0'
   s.add_dependency 'redis', '>=3.2.2'
 
   # s.add_development_dependency 'erubis'
