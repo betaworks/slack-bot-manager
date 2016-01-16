@@ -3,3 +3,4 @@
 .env
 pkg
 Gemfile.lock
+tokens.yml
