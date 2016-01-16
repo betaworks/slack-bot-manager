@@ -6,19 +6,18 @@ module SlackBotManager
     include Logger
 
     attr_accessor :commands, :connection, :id, :token, :status
-    attr_accessor :logger
-
+    attr_accessor(*Config::CLIENT_ATTRIBUTES)
 
     def initialize(id, token, *args)
-      opts = args.extract_options!
-      @id, @token, @events, @status = id, token, opts[:events] || {}, :disconnected
+      options = args.extract_options!
+      @id, @token, @events, @status = id, token, options[:events] || {}, :disconnected
 
       # Setup client and assign commands
       @connection = Slack::RealTime::Client.new(token: @token)
 
-      # Load just logger config
-      [:logger].each do |key|
-        send("#{key}=", opts[key] || SlackBotManager.config.send(key))
+      # Load config options
+      SlackBotManager::Config::CLIENT_ATTRIBUTES.each do |key|
+        send("#{key}=", options[key] || SlackBotManager.config.send(key))
       end
 
       # Assign commands
@@ -58,11 +57,12 @@ module SlackBotManager
 
   protected
 
-    def send_message(text, *args)
-      opts = args.extract_options!
+    def send_message(channel, text, *args)
+      options = args.extract_options!
       # TODO : HANDLE CASES WHERE NEED TO POST ATTACHMENTS, SEND DMs, ETC
-      opts[:text] = text
-      connection.message(opts)
+      options[:channel] = channel
+      options[:text] = text
+      connection.message(options)
     end
 
     def assign_event(evt, evt_name)

@@ -20,7 +20,7 @@ module SlackBotManager
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          raise SlackBotManager::InvalidToken if id.blank?
+          raise SlackBotManager::InvalidToken if !!id.empty?
 
           # Delete from token and connections list
           self.redis.hdel(self.tokens_key, id)
@@ -31,12 +31,19 @@ module SlackBotManager
       end
     end
 
+    # Remove all tokens
+    def clear_tokens
+      remove_token(*self.redis.hgetall(self.tokens_key).values)
+    rescue => err
+      nil
+    end
+
     # Restart token connection(s)
     def update_token(*tokens)
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          raise SlackBotManager::InvalidToken if id.blank?
+          raise SlackBotManager::InvalidToken if !!id.empty?
 
           # Issue reset command
           self.redis.hset(self.teams_key, id, 'restart')

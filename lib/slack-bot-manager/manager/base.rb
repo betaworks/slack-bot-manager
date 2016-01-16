@@ -7,7 +7,7 @@ module SlackBotManager
     include Logger
 
     attr_accessor :connections
-    attr_accessor(*Config::ATTRIBUTES)
+    attr_accessor(*Config::MANAGER_ATTRIBUTES)
 
     def initialize(*args)
       options = args.extract_options!
@@ -16,7 +16,7 @@ module SlackBotManager
       @connections = {}
 
       # Load config options
-      SlackBotManager::Config::ATTRIBUTES.each do |key|
+      SlackBotManager::Config::MANAGER_ATTRIBUTES.each do |key|
         send("#{key}=", options[key] || SlackBotManager.config.send(key))
       end
     end

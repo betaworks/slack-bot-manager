@@ -3,7 +3,7 @@ module SlackBotManager
 
     extend self
 
-    ATTRIBUTES = [
+    MANAGER_ATTRIBUTES = [
       :tokens_key,
       :teams_key,
       :check_interval,
@@ -13,7 +13,15 @@ module SlackBotManager
       :verbose
     ]
 
-    attr_accessor(*Config::ATTRIBUTES)
+    CLIENT_ATTRIBUTES = [
+      :redis,
+      :logger,
+      :log_level,
+      :verbose
+    ]
+
+    attr_accessor(*Config::MANAGER_ATTRIBUTES)
+    attr_accessor(*Config::CLIENT_ATTRIBUTES)
 
     def reset
       self.tokens_key = 'tokens:statuses'

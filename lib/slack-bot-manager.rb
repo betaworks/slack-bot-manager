@@ -8,6 +8,7 @@ require 'slack-bot-manager/version'
 require 'slack-bot-manager/errors'
 require 'slack-bot-manager/logger'
 require 'slack-bot-manager/config'
+require 'slack-bot-manager/extend.rb'
 
 # bot client connection
 require 'slack-bot-manager/client/commands'

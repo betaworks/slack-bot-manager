@@ -26,7 +26,7 @@ module SlackBotManager
               destroy(cid: cid, remove_token: to_remove)
 
             # Team is no longer valid, remove
-            elsif tokens_status[conn.id].blank?
+            elsif !!tokens_status[conn.id].empty?
               warning("Removing: #{conn.id} (Reason: token_missing)")
               destroy(cid: cid, remove_token: true)
 
@@ -54,7 +54,7 @@ module SlackBotManager
           tokens_status, rtm_status = self.redis.hgetall(tokens_key), self.redis.hgetall(teams_key)
           tokens_diff = (tokens_status.keys - rtm_status.keys) + (rtm_status.keys - tokens_status.keys)
 
-          unless tokens_diff.blank?
+          unless !!tokens_diff.empty?
             tokens_diff.uniq.each do |id|
               warning("Starting: #{id}")
               destroy(id: id)
@@ -135,13 +135,13 @@ module SlackBotManager
 
     # Disconnect from a RTM connection
     def destroy(*args)
-      opts = args.extract_options!
+      options = args.extract_options!
 
       # Get connection or search for connection with cid
-      if opts[:cid]
-        conn, cid = connections[opts[:cid]], opts[:cid]
-      elsif opts[:id]
-        conn, cid = find_connection(opts[:id])
+      if options[:cid]
+        conn, cid = connections[options[:cid]], options[:cid]
+      elsif options[:id]
+        conn, cid = find_connection(options[:id])
       end
       return false unless conn && cid
 
@@ -150,7 +150,7 @@ module SlackBotManager
         thr = Thread.new {
           self.redis.hdel(teams_key, conn.id) rescue nil
 
-          if opts[:remove_token]
+          if options[:remove_token]
             self.redis.hdel(tokens_key, conn.id) rescue nil
           end
         }
