@@ -8,7 +8,7 @@ module SlackBotManager
           team_info = check_token_status(token)
 
           # Add to token list
-          self.redis.hset(self.tokens_key, team_info['team_id'], token)
+          redis.hset(tokens_key, team_info['team_id'], token)
         rescue => err
           on_error(err)
         end
@@ -20,11 +20,11 @@ module SlackBotManager
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          raise SlackBotManager::InvalidToken if !!id.empty?
+          fail SlackBotManager::InvalidToken if id.empty?
 
           # Delete from token and connections list
-          self.redis.hdel(self.tokens_key, id)
-          self.redis.hdel(self.teams_key, id)
+          redis.hdel(tokens_key, id)
+          redis.hdel(teams_key, id)
         rescue => err
           on_error(err)
         end
@@ -33,8 +33,8 @@ module SlackBotManager
 
     # Remove all tokens
     def clear_tokens
-      remove_token(*self.redis.hgetall(self.tokens_key).values)
-    rescue => err
+      remove_token(*redis.hgetall(tokens_key).values)
+    rescue
       nil
     end
 
@@ -43,10 +43,10 @@ module SlackBotManager
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          raise SlackBotManager::InvalidToken if !!id.empty?
+          fail SlackBotManager::InvalidToken if id.empty?
 
           # Issue reset command
-          self.redis.hset(self.teams_key, id, 'restart')
+          redis.hset(teams_key, id, 'restart')
         rescue => err
           on_error(err)
         end
@@ -55,7 +55,7 @@ module SlackBotManager
 
     # Check token connection(s)
     def check_token(*tokens)
-      rtm_keys = self.redis.hgetall(self.teams_key)
+      rtm_keys = redis.hgetall(teams_key)
 
       tokens.each do |token|
         begin
@@ -68,18 +68,18 @@ module SlackBotManager
       end
     end
 
-  protected
+    protected
 
     # Get team id from Slack. (also test if token is valid)
     def check_token_status(token)
       info = Slack::Web::Client.new(token: token).auth_test
-      raise SlackBotManager::InvalidToken unless info && info['ok']
+      fail SlackBotManager::InvalidToken unless info && info['ok']
       info
     end
 
     # Given a token, get id from tokens list
     def get_id_from_token(token)
-      self.redis.hgetall(self.tokens_key).each{|id,t| return id if t == token }
+      redis.hgetall(tokens_key).each { |id, t| return id if t == token }
       false
     end
 

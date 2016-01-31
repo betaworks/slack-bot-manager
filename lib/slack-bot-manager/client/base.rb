@@ -21,9 +21,9 @@ module SlackBotManager
       end
 
       # Assign commands
-      self.methods.each do |n|
+      methods.each do |n|
         # Require methods to include on_*
-        next unless n.match(/^on_/) && self.respond_to?(n)
+        next unless n.match(/^on_/) && respond_to?(n)
         assign_event(n.to_s.gsub(/^on_/, ''), n)
       end
 
@@ -55,7 +55,7 @@ module SlackBotManager
     end
 
 
-  protected
+    protected
 
     def send_message(channel, text, *args)
       options = args.extract_options!
@@ -78,10 +78,14 @@ module SlackBotManager
     # Handle different error cases
     def handle_error(err, data=nil)
       case determine_error_type(err)
-        when :token_revoked;  on_revoke(data)
-        when :rate_limited;   on_rate_limit(data)
-        when :closed;         on_close(data)
-        else;                 on_error(err, data)
+      when :token_revoked
+        on_revoke(data)
+      when :rate_limited
+        on_rate_limit(data)
+      when :closed
+        on_close(data)
+      else
+        on_error(err, data)
       end
     end
 

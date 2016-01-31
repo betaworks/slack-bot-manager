@@ -11,14 +11,14 @@ module SlackBotManager
       :logger,
       :log_level,
       :verbose
-    ]
+    ].freeze
 
     CLIENT_ATTRIBUTES = [
       :redis,
       :logger,
       :log_level,
       :verbose
-    ]
+    ].freeze
 
     WEB_CLIENT_ATTRIBUTES = [
       :user_agent,
@@ -26,17 +26,17 @@ module SlackBotManager
       :ca_path,
       :ca_file,
       :endpoint
-    ]
+    ].freeze
 
     RTM_CLIENT_ATTRIBUTES = [
       :websocket_ping,
       :websocket_proxy
-    ]
+    ].freeze
 
-    attr_accessor *Config::MANAGER_ATTRIBUTES
-    attr_accessor *Config::CLIENT_ATTRIBUTES
-    attr_accessor *Config::WEB_CLIENT_ATTRIBUTES
-    attr_accessor *Config::RTM_CLIENT_ATTRIBUTES
+    attr_accessor(*Config::MANAGER_ATTRIBUTES)
+    attr_accessor(*Config::CLIENT_ATTRIBUTES)
+    attr_accessor(*Config::WEB_CLIENT_ATTRIBUTES)
+    attr_accessor(*Config::RTM_CLIENT_ATTRIBUTES)
 
     def reset
       # Slack web and realtime config options

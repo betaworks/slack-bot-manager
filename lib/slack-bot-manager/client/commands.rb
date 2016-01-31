@@ -7,19 +7,19 @@ module SlackBotManager
       options[:code] ||= (data && data.code) || '1000'
 
       disconnect
-      raise SlackBotManager::ConnectionRateLimited if ['1008','429'].include?(options[:code].to_s)
+      fail SlackBotManager::ConnectionRateLimited if ['1008','429'].include?(options[:code].to_s)
     end
 
     # Handle rate limit errors coming from web API
-    def on_revoke(data)
+    def on_revoke(*)
       disconnect(:token_revoked)
-      raise SlackBotManager::TokenRevoked
+      fail SlackBotManager::TokenRevoked
     end
 
     # Handle rate limit errors coming from web API
-    def on_rate_limit(data)
+    def on_rate_limit(*)
       disconnect(:rate_limited)
-      raise SlackBotManager::ConnectionRateLimited
+      fail SlackBotManager::ConnectionRateLimited
     end
 
   end
