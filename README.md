@@ -1,6 +1,6 @@
 # Slack Bot Manager
 
-![Gem Version](https://badge.fury.io/rb/slack-bot-manager.svg)](http://badge.fury.io/rb/slack-bot-manager)
+[![Gem Version](https://badge.fury.io/rb/slack-bot-manager.svg)](http://badge.fury.io/rb/slack-bot-manager)
 [![Build Status](https://travis-ci.org/betaworks/slack-bot-manager.svg?branch=master)](https://travis-ci.org/betaworks/slack-bot-manager)
 [![Code Climate](https://codeclimate.com/github/betaworks/slack-bot-manager/badges/gpa.svg)](https://codeclimate.com/github/betaworks/slack-bot-manager)
 
