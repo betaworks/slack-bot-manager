@@ -4,3 +4,4 @@
 pkg
 Gemfile.lock
 tokens.yml
+slack-bot-manager-*.gem

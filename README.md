@@ -1,17 +1,19 @@
 # Slack Bot Manager
 
+![Gem Version](https://badge.fury.io/rb/slack-bot-manager.svg)](http://badge.fury.io/rb/slack-bot-manager)
+[![Build Status](https://travis-ci.org/betaworks/slack-bot-manager.svg?branch=master)](https://travis-ci.org/betaworks/slack-bot-manager)
+[![Code Climate](https://codeclimate.com/github/betaworks/slack-bot-manager/badges/gpa.svg)](https://codeclimate.com/github/betaworks/slack-bot-manager)
+
 Slack Bot Manager is a Ruby gem that allows for the management of multiple Slack RTM connections based on tokens. With only a few configuration changes, you can run a system for handling hundreds of simulatenous RTM connections for your Slack app. 
 
 
 
 ## Installation
 
-While this has yet to be compiled to a Ruby gem, it can be installed from this repository within your Gemfile:
+`gem 'slack-bot-manager'`
 
-`gem 'slack-bot-manager', github: 'betaworks/slack-bot-manager', branch: 'master'`
-
-__**This gem requires `redis` for tracking the status of tokens.**__
-You will need to have `redis` running for this gem to work.
+__**At this time, slack-bot-manager requires `redis` for tracking the status of tokens.**__
+You will need to have `redis` running for this gem to work. 
 
 
 
