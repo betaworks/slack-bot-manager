@@ -40,7 +40,7 @@ module SlackBotManager
         [
           "\033[0;37m#{formatted_time}\033[0m",               # Formatted time
           "[\033[#{color}m#{formatted_severity}\033[0m]",     # Level
-          "[PID:#{$PID}]",                                    # PID
+          "[PID:#{$$}]",                                      # PID
           progname && progname != '' && "(#{progname})",      # Progname (team ID), if exists
           msg.strip                                           # Message
         ].compact.join(' ') + "\n"

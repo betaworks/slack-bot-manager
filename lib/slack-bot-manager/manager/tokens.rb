@@ -20,7 +20,7 @@ module SlackBotManager
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          fail SlackBotManager::InvalidToken if id.empty?
+          fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Delete from token and connections list
           redis.hdel(tokens_key, id)
@@ -43,7 +43,7 @@ module SlackBotManager
       tokens.each do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
-          fail SlackBotManager::InvalidToken if id.empty?
+          fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Issue reset command
           redis.hset(teams_key, id, 'restart')

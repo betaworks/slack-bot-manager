@@ -14,7 +14,7 @@ module SlackBotManager
         rtm_status = redis.hgetall(teams_key)
 
         # Manage connections
-        connections.each do |_, conn|
+        connections.each do |cid, conn|
           id, _s = cid.split(':')
 
           # Remove/continue if connection is/will close or no longer connected
@@ -28,7 +28,7 @@ module SlackBotManager
             destroy(cid: cid, remove_token: to_remove)
 
           # Team is no longer valid, remove
-          elsif tokens_status[conn.id].empty?
+          elsif tokens_status[conn.id].nil? || tokens_status[conn.id].empty?
             warning("Removing: #{conn.id} (Reason: token_missing)")
             destroy(cid: cid, remove_token: true)
 
@@ -43,7 +43,7 @@ module SlackBotManager
 
           # Connection should be re-created unless it is active, will update next block below
           elsif rtm_status[conn.id] != 'active'
-            warning("Restarting: #{conn.id} (Reason: #{rtm_status[conn.id]})")
+            warning("Restarting: #{conn.id} (Reason: #{rtm_status[conn.id] || '(unknown)'})")
             destroy(cid: cid)
             redis.hset(tokens_key, conn.id, tokens_status[conn.id])
           end
