@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = 'slack-bot-manager'
   s.version = SlackBotManager::VERSION
   s.authors = ['Greg Leuch']
-  s.email = 'greg@betaworks.com'
+  s.email = ['greg@betaworks.com', 'contact@gleu.ch']
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
   s.files = `git ls-files`.split("\n")
