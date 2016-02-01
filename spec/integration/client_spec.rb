@@ -50,7 +50,7 @@ RSpec.describe 'client integration test', skip: !ENV['SLACK_API_TOKEN'] && 'miss
       end
 
       # Disconnect if message is not hello
-      conn.on :message do |data|
+      conn.on :message do |_|
         disconnect
       end
 

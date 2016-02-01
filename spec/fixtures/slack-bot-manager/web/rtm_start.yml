@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://slack.com/api/rtm.start
+    body:
+      encoding: UTF-8
+      string: token=xoxb-zyx987wvu654
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Slack Bot Manager/0.1.0pre1 <https://github.com/betaworks/slack-bot-manager>
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - private, no-cache, no-store, must-revalidate
+      Content-Security-Policy:
+      - referrer no-referrer;
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Feb 2016 04:44:37 GMT
+      Expires:
+      - Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Accepted-Oauth-Scopes:
+      - rtm:stream,client
+      X-Content-Type-Options:
+      - nosniff
+      X-Oauth-Scopes:
+      - identify,bot:basic
+      X-Xss-Protection:
+      - '0'
+      Content-Length:
+      - '5183'
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"ok": true,"self": {"id": "U0GLEUCH1","name": "teambot","prefs": {"highlight_words": "","user_colors": "","color_names_in_list": true,"growls_enabled": true,"tz": null,"push_dm_alert": true,"push_mention_alert": true,"msg_replies": "{\"flexpane\":false }","push_everything": true,"push_idle_wait": 2,"push_sound": "b2.mp3","push_loud_channels": "","push_mention_channels": "","push_loud_channels_set": "","email_alerts": "instant","email_alerts_sleep_until": 0,"email_misc": true,"email_weekly": true,"welcome_message_hidden": false,"all_channels_loud": true,"loud_channels": "","never_channels": "","loud_channels_set": "","show_member_presence": true,"search_sort": "timestamp","expand_inline_imgs": true,"expand_internal_inline_imgs": true,"expand_snippets": false,"posts_formatting_guide": true,"seen_live_support_popup": false,"seen_welcome_2": false,"seen_ssb_prompt": false,"seen_spaces_new_xp_tooltip": false,"spaces_new_xp_banner_dismissed": false,"search_only_my_channels": false,"emoji_mode": "default","emoji_use": "","has_invited": false,"has_uploaded": false,"has_created_channel": false,"search_exclude_channels": "","messages_theme": "default","webapp_spellcheck": true,"no_joined_overlays": false,"no_created_overlays": false,"dropbox_enabled": false,"seen_domain_invite_reminder": false,"seen_member_invite_reminder": false,"mute_sounds": false,"arrow_history": false,"tab_ui_return_selects": true,"obey_inline_img_limit": true,"new_msg_snd": "knock_brush.mp3","collapsible": false,"collapsible_by_click": true,"require_at": false,"ssb_space_window": "","mac_ssb_bounce": "","mac_ssb_bullet": true,"expand_non_media_attachments": true,"show_typing": true,"pagekeys_handled": true,"last_snippet_type": "","display_real_names_override": 0,"time24": false,"enter_is_special_in_tbt": false,"graphic_emoticons": false,"convert_emoticons": true,"autoplay_chat_sounds": true,"ss_emojis": true,"sidebar_behavior": "","seen_onboarding_start": false,"onboarding_cancelled": false,"seen_onboarding_slackbot_conversation": false,"seen_onboarding_channels": false,"seen_onboarding_direct_messages": false,"seen_onboarding_invites": false,"seen_onboarding_search": false,"seen_onboarding_recent_mentions": false,"seen_onboarding_starred_items": false,"seen_onboarding_private_groups": false,"onboarding_slackbot_conversation_step": 0,"dnd_enabled": false,"dnd_start_hour": "22:00","dnd_end_hour": "08:00","mark_msgs_read_immediately": true,"start_scroll_at_oldest": true,"snippet_editor_wrap_long_lines": false,"ls_disabled": false,"sidebar_theme": "default","sidebar_theme_custom_values": "","f_key_search": false,"k_key_omnibox": true,"speak_growls": false,"mac_speak_voice": "com.apple.speech.synthesis.voice.Alex","mac_speak_speed": 250,"comma_key_prefs": false,"at_channel_suppressed_channels": "","push_at_channel_suppressed_channels": "","prompted_for_email_disabling": false,"full_text_extracts": false,"no_text_in_notifications": false,"muted_channels": "","no_macssb1_banner": false,"no_winssb1_banner": false,"no_omnibox_in_channels": false,"k_key_omnibox_auto_hide_count": 0,"hide_user_group_info_pane": false,"mentions_exclude_at_user_groups": false,"privacy_policy_seen": true,"search_exclude_bots": false,"fuzzy_matching": false,"load_lato_2": false,"fuller_timestamps": false,"last_seen_at_channel_warning": 0,"flex_resize_window": false,"msg_preview": false,"msg_preview_displaces": true,"msg_preview_persistent": true,"emoji_autocomplete_big": false,"winssb_run_from_tray": true,"winssb_window_flash_behavior": "idle","two_factor_auth_enabled": false,"two_factor_type": null,"two_factor_backup_type": null,"mentions_exclude_at_channels": true,"confirm_clear_all_unreads": true,"confirm_user_marked_away": true,"box_enabled": false,"seen_single_emoji_msg": false,"confirm_sh_call_start": true,"preferred_skin_tone": "","show_all_skin_tones": false,"separate_private_channels": false,"whats_new_read": 1452973574,"hotness": false,"frecency_jumper": "","jumbomoji": false},"created": 1452973574,"manual_presence": "active"},"team": {"id": "T0ABC123D","name": "Beta (Test x 2)","email_domain": "","domain": "betatesttest","msg_edit_window_mins": -1,"prefs": {"default_channels": ["C0GEN123X","C0RND123X"],"who_can_manage_integrations": {"user": ["U0GLEUCH1"]},"commands_only_regular": false,"msg_edit_window_mins": -1,"allow_message_deletion": true,"hide_referers": true,"display_real_names": false,"disable_file_uploads": "allow_all","who_can_at_everyone": "regular","who_can_at_channel": "ra","warn_before_at_channel": "always","who_can_create_channels": "regular","who_can_create_shared_channels": "admin","who_can_archive_channels": "regular","who_can_create_groups": "ra","who_can_post_general": "ra","who_can_kick_channels": "admin","who_can_kick_groups": "regular","dnd_enabled": true,"dnd_start_hour": "22:00","dnd_end_hour": "08:00","allow_shared_channels": false,"who_has_team_visibility": "ra","who_can_create_delete_user_groups": "admin","who_can_edit_user_groups": "admin","who_can_change_team_profile": "admin","retention_type": 0,"retention_duration": 0,"group_retention_type": 0,"group_retention_duration": 0,"dm_retention_type": 0,"dm_retention_duration": 0,"file_retention_type": 0,"file_retention_duration": 0,"allow_retention_override": true,"require_at_for_mention": 0,"compliance_export_start": 0,"invites_only_admins": true,"auth_mode": "normal"},"icon": {"image_34": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-34.png","image_44": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-44.png","image_68": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-68.png","image_88": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-88.png","image_102": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-102.png","image_132": "https://slack.global.ssl.fastly.net/66f9/img/avatars-teams/ava_0008-132.png","image_default": true},"over_storage_limit": false,"plan": "","over_integrations_limit": true},"latest_event_ts": "1454301277.000000","channels": [{"id": "C0GEN123X","name": "general","is_channel": true,"created": 1449006552,"creator": "U0GLEUCH1","is_archived": false,"is_general": true,"has_pins": false,"is_member": true,"last_read": "1452885703.000003","latest": {"type": "message","user": "U0GLEUCH1","text": "Hello","ts": "1454301402.000005"},"unread_count": 116,"unread_count_display": 85,"members": ["U0GLEUCH1"],"topic": {"value": "Company-wide announcements and work-based matters","creator": "","last_set": 0},"purpose": {"value": "This channel is for team-wide communication and announcements. All team members are in this channel.","creator": "","last_set": 0}},{"id": "C0RND123X","name": "random","is_channel": true,"created": 1449006552,"creator": "U0GLEUCH1","is_archived": false,"is_general": false,"has_pins": false,"is_member": false}],"groups": [],"ims": [],"cache_ts": 1454301877,"subteams": {"self": [],"all": []},"dnd": {"dnd_enabled": false,"next_dnd_start_ts": 1,"next_dnd_end_ts": 1,"snooze_enabled": false},"users": [{"id": "U0GLEUCH1","team_id": "T0ABC123D","name": "gleuch","deleted": false,"status": null,"color": "9f69e7","real_name": "","tz": "America/Indiana/Indianapolis","tz_label": "Eastern Standard Time","tz_offset": -18000,"profile": {"avatar_hash": "g2008a0f04b2","real_name": "","real_name_normalized": "","email": "greg@betaworks.com","image_24": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=24&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F66f9%2Fimg%2Favatars%2Fava_0023-24.png","image_32": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=32&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F66f9%2Fimg%2Favatars%2Fava_0023-32.png","image_48": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=48&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F66f9%2Fimg%2Favatars%2Fava_0023-48.png","image_72": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=72&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F3654%2Fimg%2Favatars%2Fava_0023-72.png","image_192": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=192&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F7fa9%2Fimg%2Favatars%2Fava_0023-192.png","image_512": "https://secure.gravatar.com/avatar/2008a0f04b2a447fdf984e0ff3a5c8ae.jpg?s=512&d=https%3A%2F%2Fslack.global.ssl.fastly.net%2F7fa9%2Fimg%2Favatars%2Fava_0023-512.png","fields": null},"is_admin": true,"is_owner": true,"is_primary_owner": true,"is_restricted": false,"is_ultra_restricted": false,"is_bot": false,"presence": "active"},{"id": "USLACKBOT","team_id": "T0ABC123D","name": "slackbot","deleted": false,"status": null,"color": "757575","real_name": "slackbot","tz": null,"tz_label": "Pacific Standard Time","tz_offset": -28800,"profile": {"first_name": "slackbot","last_name": "","image_24": "https://slack.global.ssl.fastly.net/0180/img/slackbot_24.png","image_32": "https://slack.global.ssl.fastly.net/66f9/img/slackbot_32.png","image_48": "https://slack.global.ssl.fastly.net/66f9/img/slackbot_48.png","image_72": "https://slack.global.ssl.fastly.net/0180/img/slackbot_72.png","image_192": "https://slack.global.ssl.fastly.net/66f9/img/slackbot_192.png","image_512": "https://slack.global.ssl.fastly.net/7fa9/img/slackbot_512.png","avatar_hash": "sv1444671949","real_name": "slackbot","real_name_normalized": "slackbot","email": null,"fields": null},"is_admin": false,"is_owner": false,"is_primary_owner": false,"is_restricted": false,"is_ultra_restricted": false,"is_bot": false,"presence": "active"}],"cache_version": "v12-rats","cache_ts_version": "v1-cat","bots": [{"id": "B0PLUS001","deleted": false,"name": "PlusPlus++","icons": {"image_36": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2015-11-30/15612991041_8858260d7d5e37f0c994_36.jpg","image_48": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2015-11-30/15612991041_8858260d7d5e37f0c994_48.jpg","image_72": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2015-11-30/15612991041_8858260d7d5e37f0c994_72.jpg"}}],"url": "wss://ms001.slack-msgs.com/websocket/abc123xox=="}'
+    http_version: 
+  recorded_at: Mon, 01 Feb 2016 04:44:44 GMT
