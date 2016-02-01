@@ -92,7 +92,6 @@ module SlackBotManager
     def log_formatter=(formatter)
       self.logger.formatter = formatter
     end
-
   end
 
   class << self

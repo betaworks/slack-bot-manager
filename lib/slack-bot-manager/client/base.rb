@@ -34,15 +34,15 @@ module SlackBotManager
     end
 
     # Pull info from slack-ruby-client gem
-    # [:url, :team, :self, :users, :channels, :groups, :ims, :bots].each do |attr|
-    #   define_method attr do
-    #     connection.send(attr) if connected?
-    #   end
-    # end
+    [:url, :team, :self, :users, :channels, :groups, :ims, :bots].each do |attr|
+      define_method "client_#{attr}" do
+        connection.send(attr) if connected?
+      end
+    end
 
     def connect
       connection.start_async
-      @id ||= connection.team['id']
+      @id ||= client_team['id']
       @status = :connected
     rescue => err
       handle_error(err)
