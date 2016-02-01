@@ -78,7 +78,7 @@ The following instance variables are accessible by Client and the included Comma
 variable      | description
 --------------|----------------------------------------------------------------------------------------
 `connection`  | `Slack::RealTime::Client`  connection
-`id`          | Team's Slack ID (ex. `T123ABC`)
+`id`          | Team's Slack ID (ex. `T123ABC`) _(set after successful connection)_
 `token`       | Team's Slack access token (ex. `xoxb-123abc456def`)
 `status`      | Known connection status. (`connected`, `disconnected`, `rate_limited`, `token_revoked`)
 
@@ -130,13 +130,34 @@ SlackBotManager::Manager.configure do |config|
 end
 ```
 
+### Client configuration options
+
+setting           | description
+------------------|-----------------------------------------------------------------------------------
+`redis`           | Define Redis connection. _(default: Redis.new)_
+`logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
+`log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
+`verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
+
+You can define these configuration options as:
+
+```
+SlackBotManager::Client.configure do |config|
+  config.check_interval = 10 # in seconds
+  config.log_level = ::Logger::INFO
+end
+```
+
+
+### Additional configuration options
+
 For customization of Slack connections, including proxy, websocket ping, endpoint, user-agent, and more, check out the [slack-ruby-client README](https://github.com/dblock/slack-ruby-client/blob/master/README.md).
 
 
 
 ## Examples
 
-(TODO)
+You can check a few creative examples in the [examples](examples/) folder.
 
 
 
@@ -152,6 +173,7 @@ Also thanks to [slack-ruby-client](https://github.com/dblock/slack-ruby-client).
 
 See [CONTRIBUTING](CONTRIBUTING.md).
 
+Thanks to our contributors [Greg Leuch](https://gleu.ch) and [Alex Baldwin][http://goose.im].
 
 
 ## Copyright and License
