@@ -8,7 +8,3 @@ require 'slack-bot-manager'
 Dir[File.join(File.dirname(__FILE__), 'support', '**/*.rb')].each do |file|
   require file
 end
-
-SlackBotManager.configure do |config|
-  config.verbose = true
-end

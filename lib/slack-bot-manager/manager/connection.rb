@@ -124,6 +124,7 @@ module SlackBotManager
 
       # Create connection
       conn = SlackBotManager::Client.new(token)
+      conn.connect
 
       # Add to connections using a uniq token
       if conn

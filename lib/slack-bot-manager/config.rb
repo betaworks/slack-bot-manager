@@ -32,6 +32,10 @@ module SlackBotManager
       :websocket_proxy
     ].freeze
 
+    RTM_CLIENT_METHODS = [
+      :url, :team, :self, :users, :channels, :groups, :ims, :bots
+    ].freeze
+
     attr_accessor(*Config::MANAGER_ATTRIBUTES)
     attr_accessor(*Config::CLIENT_ATTRIBUTES)
     attr_accessor(*Config::WEB_CLIENT_ATTRIBUTES)

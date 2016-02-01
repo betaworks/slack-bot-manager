@@ -17,3 +17,14 @@ unless [].respond_to?(:extract_options!)
     end
   end
 end
+
+module Slack
+  module RealTime
+    class Client
+      def off(type)
+        type = type.to_s
+        callbacks.delete(type) if callbacks.key?(type)
+      end
+    end
+  end
+end

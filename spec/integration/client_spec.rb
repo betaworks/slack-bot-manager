@@ -22,6 +22,7 @@ RSpec.describe 'client integration test', skip: !ENV['SLACK_API_TOKEN'] && 'miss
 
   it 'client connection' do
     conn = SlackBotManager::Client.new(ENV['SLACK_API_TOKEN'])
+    conn.connect
     sleep 2
     fail unless conn.connected?
     fail if !conn.id || conn.id.empty?
@@ -32,42 +33,28 @@ RSpec.describe 'client integration test', skip: !ENV['SLACK_API_TOKEN'] && 'miss
   end
 
   context 'with commands' do
-    before do
-      module SlackBotManager
-        module Commands
-          def n
-            @n ||= "Hello! #{Time.now.to_i}"
-          end
-
-          def on_hello(*)
-            sleep 1
-            channel = client_channels.first['id']
-            send_message(channel, n)
-          end
-
-          def on_message(data)
-            if data['text'] == n
-              sleep 1
-              send_message(data['channel'], "Bye! #{n}")
-            else
-              disconnect
-            end
-          end
-        end
-      end
-    end
+    let(:conn) { SlackBotManager::Client.new(ENV['SLACK_API_TOKEN']) }
 
     after do
-      module SlackBotManager
-        module Commands
-          remove_method :on_hello
-          remove_method :on_message
-        end
-      end
+      conn.off :hello
+      conn.off :message
     end
 
     it 'can handle special commands' do
-      conn = SlackBotManager::Client.new(ENV['SLACK_API_TOKEN'])
+      hello = "Hello #{Time.now.to_i}"
+
+      # On hello, say hello
+      conn.on :hello do |_|
+        channel = client_channels.first['id']
+        send_message(channel, hello)
+      end
+
+      # Disconnect if message is not hello
+      conn.on :message do |data|
+        disconnect
+      end
+
+      conn.connect
       sleep 3
       fail if conn.connected?
     end

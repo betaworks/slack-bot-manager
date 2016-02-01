@@ -29,12 +29,10 @@ module SlackBotManager
         next unless n.match(/^on_/) && respond_to?(n)
         assign_event(n.to_s.gsub(/^on_/, ''), n)
       end
-
-      connect
     end
 
     # Pull info from slack-ruby-client gem
-    [:url, :team, :self, :users, :channels, :groups, :ims, :bots].each do |attr|
+    SlackBotManager::Config::RTM_CLIENT_METHODS.each do |attr|
       define_method "client_#{attr}" do
         connection.send(attr) if connected?
       end
@@ -48,12 +46,12 @@ module SlackBotManager
       handle_error(err)
     end
 
-    def disconnect(reason = :disconnected)
+    def disconnect(reason = nil)
       connection && connection.stop!
     rescue => err
       handle_error(err)
     ensure
-      @status = reason if @status == :connected
+      @status = reason || :disconnected # if @status == :connected
       remove_instance_variable(:@connection) if @connection
     end
 
@@ -65,7 +63,15 @@ module SlackBotManager
       !connected?
     end
 
-    protected
+    def on(evt, &block)
+      self.class.send(:define_method, "on_#{evt}", &block)
+      assign_event(evt, "on_#{evt}")
+    end
+
+    def off(evt)
+      self.class.send(:remove_method, "on_#{evt}")
+      unassign_event(evt)
+    end
 
     def send_message(channel, text, *args)
       options = args.extract_options!
@@ -75,6 +81,8 @@ module SlackBotManager
       connection.message(options)
     end
 
+    protected
+
     def assign_event(evt, evt_name)
       connection.on(evt) do |data|
         begin
@@ -83,6 +91,10 @@ module SlackBotManager
           handle_error(err)
         end
       end
+    end
+
+    def unassign_event(evt)
+      connection.off(evt) if connection
     end
 
     # Handle different error cases
