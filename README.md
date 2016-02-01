@@ -173,7 +173,7 @@ Also thanks to [slack-ruby-client](https://github.com/dblock/slack-ruby-client).
 
 See [CONTRIBUTING](CONTRIBUTING.md).
 
-Thanks to our contributors [Greg Leuch](https://gleu.ch) and [Alex Baldwin][http://goose.im].
+Thanks to our contributors [Greg Leuch](https://gleu.ch) and [Alex Baldwin](http://goose.im).
 
 
 ## Copyright and License
