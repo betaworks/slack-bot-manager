@@ -1,6 +1,5 @@
 module SlackBotManager
   module Logger
-
     def info(msg)
       logger.info(@id) { msg }
     end
@@ -17,7 +16,6 @@ module SlackBotManager
       logger.error(@id) { msg }
     end
 
-
     class Formatter
       SEVERITY_TO_COLOR_MAP = {
         'DEBUG' => '0;37',
@@ -29,8 +27,8 @@ module SlackBotManager
       }.freeze
 
       def call(severity, timeat, progname, message)
-        formatted_severity = sprintf("%-5s", severity).strip
-        formatted_time = timeat.strftime("%Y-%m-%d %H:%M:%S.") << timeat.usec.to_s[0..2].rjust(3)
+        formatted_severity = format('%-5s', severity).strip
+        formatted_time = timeat.strftime('%Y-%m-%d %H:%M:%S.') << timeat.usec.to_s[0..2].rjust(3)
         color = SEVERITY_TO_COLOR_MAP[severity]
 
         # Handle backtrace, if any
@@ -40,12 +38,11 @@ module SlackBotManager
         [
           "\033[0;37m#{formatted_time}\033[0m",               # Formatted time
           "[\033[#{color}m#{formatted_severity}\033[0m]",     # Level
-          "[PID:#{$$}]",                                      # PID
+          "[PID:#{$PID}]",                                    # PID
           progname && progname != '' && "(#{progname})",      # Progname (team ID), if exists
           msg.strip                                           # Message
         ].compact.join(' ') + "\n"
       end
     end
-
   end
 end

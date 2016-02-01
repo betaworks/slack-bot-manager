@@ -1,6 +1,5 @@
 module SlackBotManager
   module Config
-
     extend self
 
     MANAGER_ATTRIBUTES = [

@@ -1,6 +1,5 @@
 module SlackBotManager
   module Connection
-
     # Monitor our connections, while connections is {...}
     def monitor
       while connections
@@ -36,23 +35,25 @@ module SlackBotManager
             warning("Removing: #{conn.id} (Reason: token_destroy)")
             destroy(cid: cid)
 
-          # Kill connection if token has changed, will re-create next block below
+          # Kill connection if token has changed, will re-create below
           elsif tokens_status[conn.id] != conn.token
             warning("Removing: #{conn.id} (Reason: new_token)")
             destroy(cid: cid)
 
-          # Connection should be re-created unless it is active, will update next block below
+          # Connection should re-create unless active, will update below
           elsif rtm_status[conn.id] != 'active'
-            warning("Restarting: #{conn.id} (Reason: #{rtm_status[conn.id] || '(unknown)'})")
+            reason = rtm_status[conn.id] || '(unknown)'
+            warning("Restarting: #{conn.id} (Reason: #{reason})")
             destroy(cid: cid)
             redis.hset(tokens_key, conn.id, tokens_status[conn.id])
           end
         end
 
-        # Give pause before any reconnects, as destroy methods might still be processing in their threads
+        # Pause before reconnects, as destroy might be processing in threads
         sleep 1
 
-        # Check for new tokens / reconnections (reload keys since we might modify if bad). Kill and recreate
+        # Check for new tokens / reconnections
+        # (reload keys since we might modify if bad). Kill and recreate
         tokens_status = redis.hgetall(tokens_key)
         rtm_status = redis.hgetall(teams_key)
         tokens_diff = (tokens_status.keys - rtm_status.keys) + (rtm_status.keys - tokens_status.keys)
@@ -83,17 +84,18 @@ module SlackBotManager
     # Remove all connections from app, will disconnect in monitor loop
     def stop
       # Thread wrapped to ensure no lock issues on shutdown
-      thr = Thread.new {
+      thr = Thread.new do
         conns = redis.hgetall(teams_key)
         redis.pipelined do
           conns.each { |k, _| redis.hset(teams_key, k, 'destroy') }
         end
         info('Stopped.')
-      }
+      end
       thr.join
     end
 
-    # Issue restart status on all RTM connections, will re-connect in monitor loop
+    # Issue restart status on all RTM connections
+    # will re-connect in monitor loop
     def restart
       conns = redis.hgetall(teams_key)
       redis.pipelined do
@@ -105,7 +107,6 @@ module SlackBotManager
     def status
       info("Active connections: [#{redis.hgetall(teams_key).count}]")
     end
-
 
     protected
 
@@ -122,9 +123,9 @@ module SlackBotManager
       fail SlackBotManager::TokenAlreadyConnected if find_connection(id)
 
       # Create connection
-      conn = SlackBotManager::Client.new(id, token)
+      conn = SlackBotManager::Client.new(token)
 
-      # Add to connections using a uniq token, as we might have connection closing and opening with same id
+      # Add to connections using a uniq token
       if conn
         cid = [id, Time.now.to_i].join(':')
         connections[cid] = conn
@@ -141,18 +142,19 @@ module SlackBotManager
 
       # Get connection or search for connection with cid
       if options[:cid]
-        conn, cid = connections[options[:cid]], options[:cid]
+        conn = connections[options[:cid]]
+        cid = options[:cid]
       elsif options[:id]
         conn, cid = find_connection(options[:id])
       end
       return false unless conn && cid
 
-      # Kill connection, remove from connection keys, and delete from connections list
+      # Kill connection, remove from keys, and delete from list
       begin
-        thr = Thread.new {
+        thr = Thread.new do
           redis.hdel(teams_key, conn.id) rescue nil
           redis.hdel(tokens_key, conn.id) rescue nil if options[:remove_token]
-        }
+        end
         thr.join
         connections.delete(cid)
       rescue
@@ -161,6 +163,5 @@ module SlackBotManager
     rescue => err
       on_error(err)
     end
-
   end
 end

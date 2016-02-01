@@ -1,6 +1,7 @@
 # Core requirements
 require 'logger'
 require 'redis'
+require 'English'
 require 'slack-ruby-client'
 
 # core components

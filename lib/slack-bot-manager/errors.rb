@@ -1,5 +1,4 @@
 module SlackBotManager
-
   class ConnectionClosed < StandardError; end
   class ConnectionRateLimited < StandardError; end
   class InvalidToken < StandardError; end
@@ -7,13 +6,11 @@ module SlackBotManager
   class TokenNotConnected < StandardError; end
   class TokenRevoked < StandardError; end
 
-
   module Errors
-
     # Mapping of error classes to type
     CLASS_ERROR_TYPES = {
       token_revoked: [
-        SlackBotManager::InvalidToken, 
+        SlackBotManager::InvalidToken,
         SlackBotManager::TokenRevoked
       ],
       rate_limited: [
@@ -36,15 +33,14 @@ module SlackBotManager
       # Check known error types, unless string
       CLASS_ERROR_TYPES.each { |k, v| return k if v.include?(err) } unless err.is_a?(String)
 
-      # Check string matches, as we might get code responses or capture something inside it
+      # Check string matches for code responses or capture something inside it
       STRING_ERROR_TYPES.each { |k, v| return k if v.match(err.to_s) }
 
       :error
     end
 
-    def on_error(err, _=nil)
+    def on_error(err, _ = nil)
       error(err)
     end
-
   end
 end

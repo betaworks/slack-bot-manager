@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'integration test', skip: !ENV['SLACK_API_TOKEN'] && 'missing SLACK_API_TOKEN' do
+RSpec.describe 'manager integration test', skip: !ENV['SLACK_API_TOKEN'] && 'missing SLACK_API_TOKEN' do
   around do |ex|
     WebMock.allow_net_connect!
     VCR.turned_off { ex.run }
@@ -24,20 +24,20 @@ RSpec.describe 'integration test', skip: !ENV['SLACK_API_TOKEN'] && 'missing SLA
 
   let(:manager) { SlackBotManager::Manager.new }
 
-  let(:thr) { nil }
+  let(:thread) { nil }
 
   # Start and run monitor in thread
   def start_manager
     manager.start
-    thr = Thread.new { manager.monitor }
-    sleep 2
-  end
-  def stop_manager
-    manager.stop
-    thr.exit rescue nil
-    sleep 1
+    thread = Thread.new { manager.monitor }
   end
 
+  def stop_manager
+    manager.stop
+    thread.exit
+  rescue
+    nil
+  end
 
   context 'manager started' do
     context 'with client token' do
@@ -48,20 +48,20 @@ RSpec.describe 'integration test', skip: !ENV['SLACK_API_TOKEN'] && 'missing SLA
       it 'can add, check, update, and remove a token' do
         # Add and remove
         manager.add_token ENV['SLACK_API_TOKEN']
-        sleep 3
+        sleep 2
         manager.remove_token ENV['SLACK_API_TOKEN']
-        sleep 3
+        sleep 2
 
         # Add and check status
         manager.add_token ENV['SLACK_API_TOKEN']
-        sleep 3
+        sleep 2
         status = manager.check_token ENV['SLACK_API_TOKEN']
         fail if !status || status.empty?
-        sleep 3
+        sleep 2
 
         # Update token and remove
         manager.update_token ENV['SLACK_API_TOKEN']
-        sleep 1
+        sleep 2
         manager.remove_token ENV['SLACK_API_TOKEN']
       end
     end
@@ -76,21 +76,21 @@ RSpec.describe 'integration test', skip: !ENV['SLACK_API_TOKEN'] && 'missing SLA
       end
       it 'stop' do
         manager.start
-        sleep 1
+        sleep 2
         manager.stop
       end
       it 'restart' do
         manager.start
-        sleep 1
+        sleep 2
         manager.restart
       end
       it 'monitor' do
         manager.start
-        thr = Thread.new { manager.monitor }
+        thread = Thread.new { manager.monitor }
         # Let it run for a few seconds before killing
-        sleep 3
-        fail unless thr.status # nil or false means error
-        thr.exit
+        sleep 2
+        fail unless thread.status # nil or false means error
+        thread.exit
       end
       it 'status' do
         manager.start

@@ -1,13 +1,12 @@
 module SlackBotManager
   module Commands
-
     # Handle when connection gets closed
     def on_close(data, *args)
       options = args.extract_options!
       options[:code] ||= (data && data.code) || '1000'
 
       disconnect
-      fail SlackBotManager::ConnectionRateLimited if ['1008','429'].include?(options[:code].to_s)
+      fail SlackBotManager::ConnectionRateLimited if %w(1008 429).include?(options[:code].to_s)
     end
 
     # Handle rate limit errors coming from web API
@@ -21,6 +20,5 @@ module SlackBotManager
       disconnect(:rate_limited)
       fail SlackBotManager::ConnectionRateLimited
     end
-
   end
 end

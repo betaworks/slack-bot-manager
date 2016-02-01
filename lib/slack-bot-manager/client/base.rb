@@ -1,6 +1,5 @@
 module SlackBotManager
   class Client
-
     include Commands
     include Errors
     include Logger
@@ -8,9 +7,13 @@ module SlackBotManager
     attr_accessor :commands, :connection, :id, :token, :status
     attr_accessor(*Config::CLIENT_ATTRIBUTES)
 
-    def initialize(id, token, *args)
+    def initialize(token, *args)
       options = args.extract_options!
-      @id, @token, @events, @status = id, token, options[:events] || {}, :disconnected
+
+      # Option values
+      @token = token
+      @id = options[:id]
+      @status = :disconnected
 
       # Setup client and assign commands
       @connection = Slack::RealTime::Client.new(token: @token)
@@ -30,14 +33,22 @@ module SlackBotManager
       connect
     end
 
+    # Pull info from slack-ruby-client gem
+    # [:url, :team, :self, :users, :channels, :groups, :ims, :bots].each do |attr|
+    #   define_method attr do
+    #     connection.send(attr) if connected?
+    #   end
+    # end
+
     def connect
       connection.start_async
+      @id ||= connection.team['id']
       @status = :connected
     rescue => err
       handle_error(err)
     end
 
-    def disconnect(reason=:disconnected)
+    def disconnect(reason = :disconnected)
       connection && connection.stop!
     rescue => err
       handle_error(err)
@@ -53,7 +64,6 @@ module SlackBotManager
     def disconnected?
       !connected?
     end
-
 
     protected
 
@@ -76,7 +86,7 @@ module SlackBotManager
     end
 
     # Handle different error cases
-    def handle_error(err, data=nil)
+    def handle_error(err, data = nil)
       case determine_error_type(err)
       when :token_revoked
         on_revoke(data)
@@ -89,5 +99,15 @@ module SlackBotManager
       end
     end
 
+    # Include config helpers
+    class << self
+      def configure
+        block_given? ? yield(config) : config
+      end
+
+      def config
+        Config
+      end
+    end
   end
 end

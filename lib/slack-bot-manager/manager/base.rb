@@ -1,6 +1,5 @@
 module SlackBotManager
   class Manager
-
     include Tokens
     include Connection
     include Errors
@@ -21,6 +20,7 @@ module SlackBotManager
       end
     end
 
+    # Include config helpers
     class << self
       def configure
         block_given? ? yield(config) : config
@@ -30,6 +30,5 @@ module SlackBotManager
         Config
       end
     end
-
   end
 end

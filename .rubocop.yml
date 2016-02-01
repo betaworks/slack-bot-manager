@@ -1,9 +1,6 @@
 AllCops:
   Exclude:
     - vendor/**/*
-    - examples/botspotting/**/*
-    - examples/dm-bot/**/*
-    - examples/downforeveryone-bot/**/*
-    - examples/emoji-art-bot/**/*
+    - examples/**/*
 
-#inherit_from: .rubocop_todo.yml
+inherit_from: .rubocop_todo.yml

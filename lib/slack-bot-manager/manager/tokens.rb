@@ -1,6 +1,5 @@
 module SlackBotManager
   module Tokens
-
     # Add token(s) to be connected
     def add_token(*tokens)
       tokens.each do |token|
@@ -60,8 +59,8 @@ module SlackBotManager
       tokens.each do |token|
         begin
           team_info = check_token_status(token)
-
-          info("Team #{team_info['team_id']} :: #{rtm_keys[ team_info['team_id'] ] || 'not_connected'}")
+          key_info = rtm_keys[team_info['team_id']] || 'not_connected'
+          info("Team #{team_info['team_id']} :: #{key_info}")
         rescue => err
           on_error(err)
         end
@@ -82,6 +81,5 @@ module SlackBotManager
       redis.hgetall(tokens_key).each { |id, t| return id if t == token }
       false
     end
-
   end
 end
