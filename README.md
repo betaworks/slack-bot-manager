@@ -99,6 +99,20 @@ variable      | description
 `id`          | Team's Slack ID (ex. `T123ABC`) _(set after successful connection)_
 `token`       | Team's Slack access token (ex. `xoxb-123abc456def`)
 `status`      | Known connection status. (`connected`, `disconnected`, `rate_limited`, `token_revoked`)
+`storage`     | Storage adapter from Config.
+
+
+### Client Methods
+
+These are some common client methods you can use to manage incoming events and interact with Slack.
+
+methods                      | description
+-----------------------------|----------------------------------------------------------------------------------------
+`message(channel, text, {})` | Send a message to channel. Handles both simple RTM message or chat.postMessage if additional options are present.
+`typing(channel, {})`        | Send typing notification.
+`ping({})`                   | Send a manual ping to Slack.
+`on(event, &block)`          | Add an event listener. (Same as extending with `on_*` methods.)
+`off(event, &block)`         | Remove an event listener. (Does not remove defined `on_*` methods.)
 
 
 ### Adding Event Listeners
@@ -127,18 +141,35 @@ end
 
 ## Configuration
 
+### Global configuration options
+
+setting           | description
+------------------|-----------------------------------------------------------------------------------
+`storage_adapter` | Token storage method. _(default: nil)_
+`storage_options` | Token storage method options. _(default: {})_
+`logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
+`log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
+`verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
+
+You can define these configuration options as:
+
+```
+SlackBotManager.configure do |config|
+  config.storage_adapter = SlackBotManager::Storage::Redis
+  config.storage_options = {host: '0.0.0.0', port: 6379}
+end
+```
+
 ### Manager configuration options
+
+Manager configuration options include the global options (`storage_adapter`, `storage_options`, `logger`, `log_level`, & `verbose`), in addition to:
+
 
 setting           | description
 ------------------|-----------------------------------------------------------------------------------
 `tokens_key`      | Redis key name for where tokens' status are stored. _(default: tokens:statuses)_
 `teams_key`       | Redis key name for where teams' tokens are stored. _(default: tokens:teams)_
 `check_interval`  | Interval (in seconds) for checking connections and tokens status. _(default: 5)_
-`storage_adapter` | Token storage method. _(default: nil)_
-`storage_options` | Token storage method options. _(default: {})_
-`logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
-`log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
-`verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
 
 You can define these configuration options as:
 
@@ -161,17 +192,12 @@ end
 
 ### Client configuration options
 
-setting           | description
-------------------|-----------------------------------------------------------------------------------
-`logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
-`log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
-`verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
+Client configuration options include the global options (`storage_adapter`, `storage_options`, `logger`, `log_level`, & `verbose`)
 
 You can define these configuration options as:
 
 ```
 SlackBotManager::Client.configure do |config|
-  config.check_interval = 10 # in seconds
   config.log_level = ::Logger::INFO
 end
 ```
