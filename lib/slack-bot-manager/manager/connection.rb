@@ -9,8 +9,8 @@ module SlackBotManager
         next unless Time.now.to_i % check_interval == 0
 
         # Get tokens and connection statuses
-        tokens_status = redis.hgetall(tokens_key)
-        rtm_status = redis.hgetall(teams_key)
+        tokens_status = storage.get_all(tokens_key)
+        rtm_status = storage.get_all(teams_key)
 
         # Manage connections
         connections.each do |cid, conn|
@@ -45,7 +45,7 @@ module SlackBotManager
             reason = rtm_status[conn.id] || '(unknown)'
             warning("Restarting: #{conn.id} (Reason: #{reason})")
             destroy(cid: cid)
-            redis.hset(tokens_key, conn.id, tokens_status[conn.id])
+            storage.set(tokens_key, conn.id, tokens_status[conn.id])
           end
         end
 
@@ -54,8 +54,8 @@ module SlackBotManager
 
         # Check for new tokens / reconnections
         # (reload keys since we might modify if bad). Kill and recreate
-        tokens_status = redis.hgetall(tokens_key)
-        rtm_status = redis.hgetall(teams_key)
+        tokens_status = storage.get_all(tokens_key)
+        rtm_status = storage.get_all(teams_key)
         tokens_diff = (tokens_status.keys - rtm_status.keys) + (rtm_status.keys - tokens_status.keys)
 
         unless tokens_diff.empty?
@@ -73,10 +73,10 @@ module SlackBotManager
     # Create websocket connections for active tokens
     def start
       # Clear RTM connections
-      redis.del(teams_key)
+      storage.delete_all(teams_key)
 
       # Start a new connection for each team
-      redis.hgetall(tokens_key).each do |id, token|
+      storage.get_all(tokens_key).each do |id, token|
         create(id, token)
       end
     end
@@ -85,9 +85,9 @@ module SlackBotManager
     def stop
       # Thread wrapped to ensure no lock issues on shutdown
       thr = Thread.new do
-        conns = redis.hgetall(teams_key)
-        redis.pipelined do
-          conns.each { |k, _| redis.hset(teams_key, k, 'destroy') }
+        conns = storage.get_all(teams_key)
+        storage.pipeline do
+          conns.each { |k, _| storage.set(teams_key, k, 'destroy') }
         end
         info('Stopped.')
       end
@@ -97,15 +97,15 @@ module SlackBotManager
     # Issue restart status on all RTM connections
     # will re-connect in monitor loop
     def restart
-      conns = redis.hgetall(teams_key)
-      redis.pipelined do
-        conns.each { |k, _| redis.hset(teams_key, k, 'restart') }
+      conns = storage.get_all(teams_key)
+      storage.pipeline do
+        conns.each { |k, _| storage.set(teams_key, k, 'restart') }
       end
     end
 
     # Get status of current connections
     def status
-      info("Active connections: [#{redis.hgetall(teams_key).count}]")
+      info("Active connections: [#{storage.get_all(teams_key).count}]")
     end
 
     protected
@@ -131,7 +131,7 @@ module SlackBotManager
         cid = [id, Time.now.to_i].join(':')
         connections[cid] = conn
         info("Connected: #{id} (Connection: #{cid})")
-        redis.hset(teams_key, id, 'active')
+        storage.set(teams_key, id, 'active')
       end
     rescue => err
       on_error(err)
@@ -153,8 +153,8 @@ module SlackBotManager
       # Kill connection, remove from keys, and delete from list
       begin
         thr = Thread.new do
-          redis.hdel(teams_key, conn.id) rescue nil
-          redis.hdel(tokens_key, conn.id) rescue nil if options[:remove_token]
+          storage.delete(teams_key, conn.id) rescue nil
+          storage.delete(tokens_key, conn.id) rescue nil if options[:remove_token]
         end
         thr.join
         connections.delete(cid)

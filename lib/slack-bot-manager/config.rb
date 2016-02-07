@@ -6,14 +6,13 @@ module SlackBotManager
       :tokens_key,
       :teams_key,
       :check_interval,
-      :redis,
+      :storage_method,
       :logger,
       :log_level,
       :verbose
     ].freeze
 
     CLIENT_ATTRIBUTES = [
-      :redis,
       :logger,
       :log_level,
       :verbose
@@ -33,7 +32,14 @@ module SlackBotManager
     ].freeze
 
     RTM_CLIENT_METHODS = [
-      :url, :team, :self, :users, :channels, :groups, :ims, :bots
+      :url,
+      :team,
+      :self,
+      :users,
+      :channels,
+      :groups,
+      :ims,
+      :bots
     ].freeze
 
     attr_accessor(*Config::MANAGER_ATTRIBUTES)
@@ -49,7 +55,7 @@ module SlackBotManager
       self.tokens_key = 'tokens:statuses'
       self.teams_key = 'tokens:teams'
       self.check_interval = 5 # seconds
-      self.redis = Redis.new
+      self.storage_method = Redis.new
       self.logger = defined?(Rails) ? Rails.logger : ::Logger.new(STDOUT)
       self.log_level = ::Logger::INFO
       self.logger.formatter = SlackBotManager::Logger::Formatter.new

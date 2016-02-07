@@ -6,6 +6,16 @@
 
 Slack Bot Manager is a Ruby gem that allows for the management of multiple Slack RTM connections based on tokens. With only a few configuration changes, you can run a system for handling hundreds of simulatenous RTM connections for your Slack app. 
 
+__**At this time, slack-bot-manager requires `redis` for tracking the status of tokens.**__
+
+_This is in pre-release and may change before release of version 0.1.0._
+
+
+__How to tell if you need this:__
+
+* You are making a Slack app requiring Real-time Messaging
+* You want to be able to handle multiple RTM connections
+* You don't want to make your own RTM (websocket) connection manager
 
 
 ## Installation
@@ -13,13 +23,21 @@ Slack Bot Manager is a Ruby gem that allows for the management of multiple Slack
 `gem 'slack-bot-manager'`
 
 __**At this time, slack-bot-manager requires `redis` for tracking the status of tokens.**__
-You will need to have `redis` running for this gem to work. 
+
+_You will need to have `redis` running for this gem to work. This dependency will be removed soon but will remain the default._
 
 
 
 ## Getting Started
 
-(TODO)
+To get started, get a token (or few) and start your script.
+
+```
+botmanager = SlackBotManager::Manager.new
+botmanager.add_token('token1', 'token2', 'token3')
+botmanager.start
+botmanager.monitor
+```
 
 
 
@@ -51,7 +69,7 @@ methods     | description
 
 ### Token Management Methods
 
-Tokens are managed within Redis. SlackBotManager will manage and monitor these redis keys for additions, updates, and remvoals. New connections must be added into the redis `teams_key`, like so:
+Tokens are managed using key storage, currently only supporting Redis. SlackBotManager will manage and monitor these  keys for additions, updates, and removals. New connections will be added into the key `teams_key`, like so:
 
 ```
 botmanager = SlackBotManager::Manager.new
@@ -116,7 +134,7 @@ setting           | description
 `tokens_key`      | Redis key name for where tokens' status are stored. _(default: tokens:statuses)_
 `teams_key`       | Redis key name for where teams' tokens are stored. _(default: tokens:teams)_
 `check_interval`  | Interval (in seconds) for checking connections and tokens status. _(default: 5)_
-`redis`           | Define Redis connection. _(default: Redis.new)_
+`storage`         | Define your connection (Redis). _(default: Redis.new)_
 `logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
 `log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
 `verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
@@ -125,7 +143,7 @@ You can define these configuration options as:
 
 ```
 SlackBotManager::Manager.configure do |config|
-  config.redis = Redis.new(host: '0.0.0.0', port: 6379)
+  config.storage = Redis.new(host: '0.0.0.0', port: 6379)
   config.check_interval = 10 # in seconds
 end
 ```
@@ -134,7 +152,6 @@ end
 
 setting           | description
 ------------------|-----------------------------------------------------------------------------------
-`redis`           | Define Redis connection. _(default: Redis.new)_
 `logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
 `log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
 `verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_

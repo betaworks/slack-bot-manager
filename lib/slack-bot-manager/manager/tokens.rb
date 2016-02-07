@@ -7,7 +7,7 @@ module SlackBotManager
           team_info = check_token_status(token)
 
           # Add to token list
-          redis.hset(tokens_key, team_info['team_id'], token)
+          storage.set(tokens_key, team_info['team_id'], token)
         rescue => err
           on_error(err)
         end
@@ -22,8 +22,8 @@ module SlackBotManager
           fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Delete from token and connections list
-          redis.hdel(tokens_key, id)
-          redis.hdel(teams_key, id)
+          storage.delete(tokens_key, id)
+          storage.delete(teams_key, id)
         rescue => err
           on_error(err)
         end
@@ -32,7 +32,7 @@ module SlackBotManager
 
     # Remove all tokens
     def clear_tokens
-      remove_token(*redis.hgetall(tokens_key).values)
+      remove_token(*storage.get_all(tokens_key).values)
     rescue
       nil
     end
@@ -45,7 +45,7 @@ module SlackBotManager
           fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Issue reset command
-          redis.hset(teams_key, id, 'restart')
+          storage.set(teams_key, id, 'restart')
         rescue => err
           on_error(err)
         end
@@ -54,7 +54,7 @@ module SlackBotManager
 
     # Check token connection(s)
     def check_token(*tokens)
-      rtm_keys = redis.hgetall(teams_key)
+      rtm_keys = storage.get_all(teams_key)
 
       tokens.each do |token|
         begin
@@ -78,7 +78,7 @@ module SlackBotManager
 
     # Given a token, get id from tokens list
     def get_id_from_token(token)
-      redis.hgetall(tokens_key).each { |id, t| return id if t == token }
+      storage.get_all(tokens_key).each { |id, t| return id if t == token }
       false
     end
   end

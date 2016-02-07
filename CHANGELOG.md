@@ -1,7 +1,7 @@
 
 ### Version 0.1.0 (20 Jan 2016)
 
-__**NOT YET RELEASED**__
+__**Pre-release at 0.1.0pre1**__
 
 This is the first version of Slack Bot Manager, and includes
 
