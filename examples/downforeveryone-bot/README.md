@@ -20,4 +20,4 @@ site can be a url (like `google.com`) or a word (like `facebook`). using a word 
 
 # credit
 
-created by [Alex Baldwin](https://github.com/goosey)
+created by [Alex Baldwin](http://goose.im)

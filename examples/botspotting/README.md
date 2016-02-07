@@ -26,4 +26,4 @@ you can either build a dexter app from scratch for this or [use one we pre-built
 
 # credit
 
-created by [Alex Balwdin](https://github.com/goosey)
+created by [Alex Balwdin](http://goose.im)

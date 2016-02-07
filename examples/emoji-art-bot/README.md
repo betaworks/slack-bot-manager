@@ -41,3 +41,8 @@ when message.include?("buildings") || message.include?("city")
 - add an `emoji again` command to do the last command again
 
 ![](http://i.imgur.com/oZIs3A4.png)
+
+
+# credits
+
+created by [Alex Baldwin](http://goose.im)
