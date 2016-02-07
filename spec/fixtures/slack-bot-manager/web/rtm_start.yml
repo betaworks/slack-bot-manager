@@ -10,7 +10,7 @@ http_interactions:
       Accept:
       - application/json; charset=utf-8
       User-Agent:
-      - Slack Bot Manager/0.1.0pre4 <https://github.com/betaworks/slack-bot-manager>
+      - Slack Bot Manager/0.1.0pre5 <https://github.com/betaworks/slack-bot-manager>
       Content-Type:
       - application/x-www-form-urlencoded
       Accept-Encoding:
@@ -176,7 +176,7 @@ http_interactions:
       Accept:
       - application/json; charset=utf-8
       User-Agent:
-      - Slack Bot Manager/0.1.0pre4 <https://github.com/betaworks/slack-bot-manager>
+      - Slack Bot Manager/0.1.0pre5 <https://github.com/betaworks/slack-bot-manager>
       Content-Type:
       - application/x-www-form-urlencoded
       Accept-Encoding:

@@ -103,9 +103,9 @@ module SlackBotManager
     end
 
     def storage_adapter=(val)
-      # return if self.storage.present? && val == @storage_adapter
+      # return if !self.storage.nil? && val == @storage_adapter
       @storage_adapter = val
-      self.storage = !@storage_adapter.empty? ? storage_adapter.new(self.storage_options) : nil
+      self.storage = !@storage_adapter.nil? ? storage_adapter.new(self.storage_options) : nil
     end
 
     def storage_options=(val)

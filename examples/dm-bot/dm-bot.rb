@@ -22,11 +22,6 @@ require 'rubygems'
 require 'bundler/setup'
 Bundler.require
 
-# Use Redis and configure slack-bot-manager
-$redis = Redis.new
-SlackBotManager.configure do |config|
-  config.storage_options = $redis # Set entire instance as option
-end
 
 # Extend commands to handle what we want done
 module SlackBotManager
@@ -38,38 +33,38 @@ module SlackBotManager
 
       # Get user info
       user_key = ['users', self.id, data['user']].join(':')
-      $redis.del user_key
-      unless $redis.exists user_key
+      storage.connection.del user_key
+      unless storage.connection.exists user_key
         # Get user info from Slack
         user_info = self.connection.web_client.users_info(user: data['user'])['user']
 
         # Store the basics into redis for quicker lookups
-        $redis.hmset user_key, *{ id: user_info['id'], name: user_info['name'], real_name: user_info['real_name'], is_bot: user_info['is_bot'] ? 1 : 0 }.flatten
+        storage.connection.hmset user_key, *{ id: user_info['id'], name: user_info['name'], real_name: user_info['real_name'], is_bot: user_info['is_bot'] ? 1 : 0 }.flatten
         # Expire this redis key weekly so that we do regular updates
-        $redis.expire user_key, 604800 # 1 week in seconds
+        storage.connection.expire user_key, 604800 # 1 week in seconds
       end
-      user_info = $redis.hgetall user_key
+      user_info = storage.connection.hgetall user_key
 
       return if [1,'1','true'].include?(user_info['is_bot'])
 
       # Get IM info, send hello message if first time
       im_key = ['ims', self.id, data['channel']].join(':')
-      $redis.del im_key
-      unless $redis.exists im_key
-        $redis.hmset im_key, *{ id: data['channel'], user: user_info['id'], started: Time.now.to_i, messages_sent: 0, messages_received: 0 }.flatten
-        self.send_message(data['channel'], "Hello there <@#{user_info['id']}>! I'm happy to listen to what you have to say. :simple_smile:")
-        $redis.hincrby im_key, 'messages_sent', 1
+      storage.connection.del im_key
+      unless storage.connection.exists im_key
+        storage.connection.hmset im_key, *{ id: data['channel'], user: user_info['id'], started: Time.now.to_i, messages_sent: 0, messages_received: 0 }.flatten
+        send_message(data['channel'], "Hello there <@#{user_info['id']}>! I'm happy to listen to what you have to say. :simple_smile:")
+        storage.connection.hincrby im_key, 'messages_sent', 1
       end
-      im_info = $redis.hgetall im_key
+      im_info = storage.connection.hgetall im_key
 
       # Increment message count
-      $redis.hincrby im_key, 'messages_received', 1
+      storage.connection.hincrby im_key, 'messages_received', 1
 
       # Parse message contents
-      message = 'If i was smarter, I would respond with something witty.'
+      msg = 'If i was smarter, I would respond with something witty.'
 
-      self.send_message(data['channel'], message)
-      $redis.hincrby im_key, 'messages_sent', 1
+      send_message(data['channel'], msg)
+      storage.connection.hincrby im_key, 'messages_sent', 1
     end
 
   end

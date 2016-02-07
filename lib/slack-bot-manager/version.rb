@@ -1,3 +1,3 @@
 module SlackBotManager
-  VERSION = '0.1.0pre4'.freeze
+  VERSION = '0.1.0pre5'.freeze
 end
