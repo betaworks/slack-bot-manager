@@ -1,9 +1,0 @@
-[submodule "examples/emoji-art-bot"]
-	path = examples/emoji-art-bot
-	url = git@github.com:goosey/emoji-art-bot.git
-[submodule "examples/downforeveryone-bot"]
-	path = examples/downforeveryone-bot
-	url = https://github.com/goosey/downforeveryone-bot
-[submodule "examples/botspotting"]
-	path = examples/botspotting
-	url = git@github.com:goosey/botspotting.git
