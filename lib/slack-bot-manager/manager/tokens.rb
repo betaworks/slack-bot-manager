@@ -2,67 +2,75 @@ module SlackBotManager
   module Tokens
     # Add token(s) to be connected
     def add_token(*tokens)
-      tokens.each do |token|
+      tokens.map do |token|
         begin
           team_info = check_token_status(token)
 
           # Add to token list
-          redis.hset(tokens_key, team_info['team_id'], token)
+          storage.set(tokens_key, team_info['team_id'], token)
+          true
         rescue => err
           on_error(err)
+          false
         end
       end
     end
 
     # Remove token(s) and connection(s)
     def remove_token(*tokens)
-      tokens.each do |token|
+      tokens.map do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
           fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Delete from token and connections list
-          redis.hdel(tokens_key, id)
-          redis.hdel(teams_key, id)
+          storage.delete(tokens_key, id)
+          storage.delete(teams_key, id)
+          true
         rescue => err
           on_error(err)
+          false
         end
       end
     end
 
     # Remove all tokens
     def clear_tokens
-      remove_token(*redis.hgetall(tokens_key).values)
+      remove_token(*storage.get_all(tokens_key).values)
     rescue
       nil
     end
 
     # Restart token connection(s)
     def update_token(*tokens)
-      tokens.each do |token|
+      tokens.map do |token|
         begin
           id = get_id_from_token(token) # As token should be in list
           fail SlackBotManager::InvalidToken if !id || id.empty?
 
           # Issue reset command
-          redis.hset(teams_key, id, 'restart')
+          storage.set(teams_key, id, 'restart')
+          true
         rescue => err
           on_error(err)
+          false
         end
       end
     end
 
     # Check token connection(s)
     def check_token(*tokens)
-      rtm_keys = redis.hgetall(teams_key)
+      rtm_keys = storage.get_all(teams_key)
 
-      tokens.each do |token|
+      tokens.map do |token|
         begin
           team_info = check_token_status(token)
           key_info = rtm_keys[team_info['team_id']] || 'not_connected'
           info("Team #{team_info['team_id']} :: #{key_info}")
+          true
         rescue => err
           on_error(err)
+          false
         end
       end
     end
@@ -78,7 +86,7 @@ module SlackBotManager
 
     # Given a token, get id from tokens list
     def get_id_from_token(token)
-      redis.hgetall(tokens_key).each { |id, t| return id if t == token }
+      storage.get_all(tokens_key).each { |id, t| return id if t == token }
       false
     end
   end

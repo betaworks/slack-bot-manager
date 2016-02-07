@@ -18,4 +18,5 @@ require 'slack-bot-manager/client/base'
 # connection manager
 require 'slack-bot-manager/manager/connection'
 require 'slack-bot-manager/manager/tokens'
+require 'slack-bot-manager/manager/storage'
 require 'slack-bot-manager/manager/base'

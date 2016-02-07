@@ -1,7 +1,6 @@
 # via https://github.com/rails/rails/blob/master/activesupport/lib/active_support/core_ext/array/extract_options.rb
 
 # Add extract_options! used in ActiveSupport
-
 unless {}.respond_to?(:extractable_options?)
   class Hash
     def extractable_options?
@@ -18,6 +17,7 @@ unless [].respond_to?(:extract_options!)
   end
 end
 
+# Allow removing methods from Slack::RealTime::Client
 module Slack
   module RealTime
     class Client

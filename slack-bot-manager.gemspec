@@ -17,8 +17,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'slack-ruby-client', '>=0.5.1'
   s.add_dependency 'faye-websocket', '>=0.10.0'
-  s.add_dependency 'redis', '>=3.2.2'
 
+  s.add_development_dependency 'redis', '>=3.2'
+  s.add_development_dependency 'dalli', '>=2.7'
   s.add_development_dependency 'erubis'
   s.add_development_dependency 'json-schema'
   s.add_development_dependency 'rake'
