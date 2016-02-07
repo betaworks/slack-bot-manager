@@ -6,8 +6,6 @@
 
 Slack Bot Manager is a Ruby gem that allows for the management of multiple Slack RTM connections based on tokens. With only a few configuration changes, you can run a system for handling hundreds of simulatenous RTM connections for your Slack app. 
 
-__**At this time, slack-bot-manager requires `redis` for tracking the status of tokens.**__
-
 _This is in pre-release and may change before release of version 0.1.0._
 
 
@@ -136,8 +134,8 @@ setting           | description
 `tokens_key`      | Redis key name for where tokens' status are stored. _(default: tokens:statuses)_
 `teams_key`       | Redis key name for where teams' tokens are stored. _(default: tokens:teams)_
 `check_interval`  | Interval (in seconds) for checking connections and tokens status. _(default: 5)_
-`storage_method`  | Token storage method. _(default: nil)__
-`storage_options` | Token storage method options. _(default: {})__
+`storage_method`  | Token storage method. _(default: nil)_
+`storage_options` | Token storage method options. _(default: {})_
 `logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
 `log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
 `verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
