@@ -24,18 +24,18 @@ class Status
 		end
 	end
 
-	def self.findurl(word)
+	def self.find_url(word)
 		uri = URI('http://api.duckduckgo.com/?q=!' + word + '&format=json&t=downforeveryone-bot')
 		output = Net::HTTP.get(uri)
 		hash = JSON.parse(output)
 		if hash['Redirect'] != ""
 			return /https?:\/\/([\w{2,}\.]+)/.match(hash['Redirect'])[1]
 		else
-			return Status.searchurl(word)
+			return Status.search_url(word)
 		end
 	end
 
-	def self.searchurl(word)
+	def self.search_url(word)
 		results = BingSearch.web(word, {:limit => 1})
 		if results[0] and results[0].display_url
 			return /(?:https?:\/\/)?([\w{2,}\.]+)/.match(results[0].display_url)[1]

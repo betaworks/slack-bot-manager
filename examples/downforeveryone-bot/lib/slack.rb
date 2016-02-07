@@ -15,24 +15,25 @@ module SlackBotManager
       site_by_link = /is <https?:\/\/[a-zA-Z\.]+\|((?:www.)\w{2,}\.\w\w{1,})> (?:down|up)/
 
       if message =~ site_by_word
+        typing(data['channel'])
         word = site_by_word.match(message)[1]
-        url = Status.findurl(word)
+        url = Status.find_url(word)
         if (url)
-          send_message(Status.isitdown(url), channel: data['channel'], icon_emoji: ":ok:")
+          message(data['channel'], Status.isitdown(url), icon_emoji: ":ok:")
         end
       end
 
       if message =~ site_by_url
+        typing(data['channel'])
         url = site_by_url.match(message)[1]
-        send_message(Status.isitdown(url), channel: data['channel'], icon_emoji: ":ok:")
+        message(data['channel'], Status.isitdown(url), icon_emoji: ":ok:")
       end
 
       if message =~ site_by_link
+        typing(data['channel'])
         url = site_by_link.match(message)[1]
-        send_message(Status.isitdown(url), channel: data['channel'], icon_emoji: ":ok:")
+        message(data['channel'], Status.isitdown(url), icon_emoji: ":ok:")
       end
-
     end
-
   end
 end

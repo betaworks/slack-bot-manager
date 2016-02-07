@@ -17,3 +17,7 @@ slack-bot-manager depends on `redis` and `slack-ruby-client`
 
 site can be a url (like `google.com`) or a word (like `facebook`). using a word can be more time intensive and potentially less accurate, since it queries the [DuckDuckGo API
 ](https://api.duckduckgo.com/api) and Bing as a backup.
+
+# credit
+
+created by [Alex Baldwin](https://github.com/goosey)
