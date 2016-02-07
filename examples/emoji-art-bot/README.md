@@ -45,4 +45,4 @@ when message.include?("buildings") || message.include?("city")
 
 # credits
 
-created by [Alex Baldwin](http://goose.im)
+created by [Alex Baldwin](http://bldwn.co)
