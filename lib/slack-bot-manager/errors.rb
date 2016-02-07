@@ -2,6 +2,7 @@ module SlackBotManager
   class ConnectionClosed < StandardError; end
   class ConnectionRateLimited < StandardError; end
   class InvalidToken < StandardError; end
+  class NoStorageMethod < StandardError; end
   class TokenAlreadyConnected < StandardError; end
   class TokenNotConnected < StandardError; end
   class TokenRevoked < StandardError; end

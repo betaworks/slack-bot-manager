@@ -20,7 +20,7 @@ module SlackBotManager
       end
 
       # Set token storage method
-      @storage = storage_class.new(storage_method)
+      @storage = storage_method.new(storage_options)
     end
 
     # Include config helpers
@@ -33,13 +33,5 @@ module SlackBotManager
         Config
       end
     end
-
-    protected
-
-    def storage_class
-      # TODO : is there better way to do this?
-      "SlackBotManager::Storage::#{storage_method.class}".constantize
-    end
-
   end
 end

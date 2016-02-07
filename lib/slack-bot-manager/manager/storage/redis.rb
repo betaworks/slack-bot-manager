@@ -5,13 +5,13 @@ module SlackBotManager
     class Redis
       attr_accessor :connection
 
-      def initialize(connection)
-        @connection = connection
+      def initialize(options)
+        @connection = options.is_a?(Redis) ? options : ::Redis.new(options)
       end
 
       def pipeline(&block)
         connection.pipelined do
-          block.call
+          yield block
         end
       end
 
@@ -19,35 +19,35 @@ module SlackBotManager
         connection.hgetall(type)
       end
 
-      def get(type,key)
-        connection.get(type,key)
+      def get(type, key)
+        connection.get(type, key)
       end
 
-      def set(type,key,val)
-        connection.hset(type,key,val)
+      def set(type, key, val)
+        connection.hset(type, key, val)
       end
 
-      def multiset(type,*args)
-        connection.hmset(type,*args)
+      def multiset(type, *args)
+        connection.hmset(type, *args)
       end
 
-      def delete(type,key)
-        connection.hdel(type,key)
+      def delete(type, key)
+        connection.hdel(type, key)
       end
 
       def delete_all(type)
         connection.del(type)
       end
 
-      # def expire(key,len)
-      #   connection.expire(key,len)
+      # def expire(key, len)
+      #   connection.expire(key, len)
       # end
 
       # def exists(type)
       #   connection.exists(key)
       # end
 
-      # def incrby(type,key,incr=1)
+      # def incrby(type, key, incr=1)
       #   # TODO
       # end
     end

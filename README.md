@@ -22,10 +22,12 @@ __How to tell if you need this:__
 
 `gem 'slack-bot-manager'`
 
-__**At this time, slack-bot-manager requires `redis` for tracking the status of tokens.**__
+This gem requires a key-value storage system for managing tokens and connection statuses. Currently, this gem supports `redis` and `dalli` (memcached).
 
-_You will need to have `redis` running for this gem to work. This dependency will be removed soon but will remain the default._
-
+```
+gem 'redis'
+gem 'dalli'
+```
 
 
 ## Getting Started
@@ -134,7 +136,8 @@ setting           | description
 `tokens_key`      | Redis key name for where tokens' status are stored. _(default: tokens:statuses)_
 `teams_key`       | Redis key name for where teams' tokens are stored. _(default: tokens:teams)_
 `check_interval`  | Interval (in seconds) for checking connections and tokens status. _(default: 5)_
-`storage`         | Define your connection (Redis). _(default: Redis.new)_
+`storage_method`  | Token storage method. _(default: nil)__
+`storage_options` | Token storage method options. _(default: {})__
 `logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
 `log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
 `verbose`         | When true, set `log_level` to ::Logger::DEBUG. _(default: false)_
@@ -143,8 +146,17 @@ You can define these configuration options as:
 
 ```
 SlackBotManager::Manager.configure do |config|
-  config.storage = Redis.new(host: '0.0.0.0', port: 6379)
+  config.storage_method = SlackBotManager::Storage::Redis
+  config.storage_options = {host: '0.0.0.0', port: 6379}
   config.check_interval = 10 # in seconds
+end
+```
+
+You can additionally send an existing storage method as the `storage_option`, such as:
+
+```
+SlackBotManager::Manager.configure do |config|
+  config.storage_options = $redis # Existing Redis connection, where $redis = Redis.new
 end
 ```
 

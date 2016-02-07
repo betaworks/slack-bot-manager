@@ -7,6 +7,7 @@ module SlackBotManager
       :teams_key,
       :check_interval,
       :storage_method,
+      :storage_options,
       :logger,
       :log_level,
       :verbose
@@ -55,7 +56,8 @@ module SlackBotManager
       self.tokens_key = 'tokens:statuses'
       self.teams_key = 'tokens:teams'
       self.check_interval = 5 # seconds
-      self.storage_method = Redis.new
+      self.storage_method = method(:detect_storage_method)
+      self.storage_options = {}
       self.logger = defined?(Rails) ? Rails.logger : ::Logger.new(STDOUT)
       self.log_level = ::Logger::INFO
       self.logger.formatter = SlackBotManager::Logger::Formatter.new
@@ -81,6 +83,10 @@ module SlackBotManager
       end
     end
 
+    def storage_method
+      (val = @storage_method).respond_to?(:call) ? val.call : val
+    end
+
     def verbose=(val)
       @verbose = val
       self.log_level = val ? ::Logger::DEBUG : ::Logger::INFO
@@ -101,6 +107,20 @@ module SlackBotManager
 
     def log_formatter=(formatter)
       self.logger.formatter = formatter
+    end
+
+    private
+
+    def detect_storage_method
+      [:Redis, :Dalli].each do |storage_method|
+        begin
+          return SlackBotManager::Storage.const_get(storage_method)
+        rescue LoadError, NameError
+          false
+        end
+      end
+
+      fail NoStorageMethod, 'Missing storage method. Add redis or dalli to your Gemfile.'
     end
   end
 
