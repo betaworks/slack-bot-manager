@@ -69,7 +69,7 @@ methods     | description
 
 ### Token Management Methods
 
-Tokens are managed using key storage, currently only supporting Redis. SlackBotManager will manage and monitor these  keys for additions, updates, and removals. New connections will be added into the key `teams_key`, like so:
+Tokens are managed using the defined storage adapter (Redis or Dalli). SlackBotManager will manage and monitor these  keys for additions, updates, and removals. New connections will be added into the key `teams_key`, like so:
 
 ```
 botmanager = SlackBotManager::Manager.new
