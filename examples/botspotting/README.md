@@ -23,3 +23,7 @@ you can either build a dexter app from scratch for this or [use one we pre-built
 5. click on your new module and hit "Configure", and drag the "message" and "subject" variables from the Webhook to the Module. for the email module, that looks like this: ![](http://s.goose.im/screenshot20160115140235.png)
 6. for the other inputs, you can either choose to prompt the user (we use this for the To field) or enter it manually. for Reply To, HTML Body, CC, and BCC, we choose to enter it manually but leave it blank
 7. click Use App in the upper right to configure the app and get your webhook URL
+
+# credit
+
+created by [Alex Balwdin](https://github.com/goosey)

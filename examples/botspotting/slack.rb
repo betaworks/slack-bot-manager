@@ -9,12 +9,11 @@ module SlackBotManager
 
     def on_hello(data)
       debug(data)
-      @team_name = self.connection.web_client.team_info['team']['name']
-      @team_domain = self.connection.web_client.team_info['team']['domain']
+      @team_name = self.client_team['name']
+      @team_domain = self.client_team['domain']
     end
 
     def on_bot_added(data)
-
       return if data['bot']['deleted'] == true
 
       subject = "someone added a bot to your team #{self.team_name}"
@@ -31,8 +30,6 @@ find out more at https://#{self.team_domain}.slack.com/apps/manage \n
       end
 
       info(res.body)
-
     end
-
   end
 end

@@ -1,12 +1,3 @@
-GIT
-  remote: git://github.com/betaworks/slack-bot-manager.git
-  revision: 96da882b0523d49f4e79da24884a2a1b0932dc41
-  branch: master
-  specs:
-    slack-bot-manager (0.1.0)
-      redis (>= 3.2.2)
-      slack-ruby-client (>= 0.5.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -26,15 +17,20 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     gli (2.13.4)
+    hashie (3.4.3)
     i18n (0.7.0)
     json (1.8.3)
-    minitest (5.8.3)
+    minitest (5.8.4)
     multipart-post (2.0.0)
     redis (3.2.2)
-    slack-ruby-client (0.5.3)
+    slack-bot-manager (0.1.0pre2)
+      faye-websocket (>= 0.10.0)
+      slack-ruby-client (>= 0.5.1)
+    slack-ruby-client (0.6.0)
       faraday
       faraday_middleware
       gli
+      hashie
       json
       websocket-driver
     thread_safe (0.3.5)
@@ -52,7 +48,8 @@ DEPENDENCIES
   dotenv
   faye-websocket (= 0.10.2)
   json
-  slack-bot-manager!
+  redis
+  slack-bot-manager
 
 BUNDLED WITH
    1.10.6
