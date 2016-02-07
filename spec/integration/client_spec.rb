@@ -45,7 +45,7 @@ RSpec.describe 'client integration test', skip: !ENV['SLACK_API_TOKEN'] && 'miss
 
       # On hello, say hello
       conn.on :hello do |_|
-        channel = client_channels.first['id']
+        channel = client_channels.keys.first
         send_message(channel, hello)
       end
 

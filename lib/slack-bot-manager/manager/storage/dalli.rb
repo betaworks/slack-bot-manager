@@ -6,7 +6,12 @@ module SlackBotManager
       attr_accessor :connection
 
       def initialize(options)
-        @connection = options.is_a?(Dalli) ? options : ::Dalli.new(options)
+        if options.is_a?(Dalli)
+          @connecton = options
+        else
+          servers = options.delete(:servers)
+          @connection = ::Dalli::Client.new(servers, options)
+        end
       end
 
       def pipeline(&block)
@@ -14,26 +19,26 @@ module SlackBotManager
       end
 
       def get_all(type)
-        connection.get(type)
+        connection.get(type) || {}
       end
 
       def get(type, key)
-        connection.get(type)[key]
+        connection.get(type).try(key)
       end
 
       def set(type, key, val)
-        obj = get(type).merge(key => val)
+        obj = get_all(type).merge(key => val)
         connection.set(type, obj)
       end
 
       def multiset(type, *args)
         vals = args.extract_options!
-        obj = get(type).merge(vals)
+        obj = get_all(type).merge(vals)
         connection.set(type, obj)
       end
 
       def delete(type, key)
-        obj = get(type)
+        obj = get_all(type)
         obj.delete(key)
         connection.set(type, obj)
       end

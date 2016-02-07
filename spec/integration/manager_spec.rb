@@ -14,7 +14,7 @@ RSpec.describe 'manager integration test', skip: !ENV['SLACK_API_TOKEN'] && 'mis
     SlackBotManager::Config.reset
     SlackBotManager::Manager.configure do |config|
       config.check_interval = 1 # check every second while in spec mode
-      config.log_level = ::Logger::WARN
+      config.log_level = ::Logger::FATAL
     end
   end
 
@@ -37,6 +37,26 @@ RSpec.describe 'manager integration test', skip: !ENV['SLACK_API_TOKEN'] && 'mis
     thread.exit
   rescue
     nil
+  end
+
+  context 'using storage' do
+    [:Redis, :Dalli].each do |store|
+      context store.to_s do
+        before do
+          SlackBotManager::Manager.configure do |config|
+            config.storage_method = SlackBotManager::Storage.const_get(store)
+          end
+        end
+
+        it 'can add, check, update, and remove a token' do
+          expect(manager.add_token(ENV['SLACK_API_TOKEN'])).to eq [true]
+          expect(manager.check_token(ENV['SLACK_API_TOKEN'])).to eq [true]
+          expect(manager.update_token(ENV['SLACK_API_TOKEN'])).to eq [true]
+          expect(manager.remove_token(ENV['SLACK_API_TOKEN'])).to eq [true]
+          expect(manager.remove_token(ENV['SLACK_API_TOKEN'])).to eq [false]
+        end
+      end
+    end
   end
 
   context 'manager started' do
