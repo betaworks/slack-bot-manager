@@ -129,7 +129,7 @@ module SlackBotManager
     end
 
     def on_team_join(data)
-      puts "New team member joined: %s" % data['user']['username']
+      connection.message(data['channel'], "Welcome: %s" % data['user']['username'])
     end
   end
 end
