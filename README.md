@@ -153,8 +153,9 @@ end
 You can additionally send an existing storage method as the `storage_option`, such as:
 
 ```
+$redis = Redis.new
 SlackBotManager::Manager.configure do |config|
-  config.storage_options = $redis # Existing Redis connection, where $redis = Redis.new
+  config.storage_options = $redis
 end
 ```
 
