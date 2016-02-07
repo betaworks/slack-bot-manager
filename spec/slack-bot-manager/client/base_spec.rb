@@ -4,7 +4,8 @@ RSpec.describe SlackBotManager::Client, vcr: { cassette_name: 'web/rtm_start' } 
   let(:url) { 'wss://ms001.slack-msgs.com/websocket/abc123xox==' }
 
   before do
-    @token = ENV.delete('SLACK_API_TOKEN')
+    @old_token = ENV.delete('SLACK_API_TOKEN')
+    @token = 'xoxb-abc123def456'
 
     SlackBotManager::Config.reset
     SlackBotManager::Client.configure do |config|
@@ -13,16 +14,16 @@ RSpec.describe SlackBotManager::Client, vcr: { cassette_name: 'web/rtm_start' } 
   end
 
   after do
-    ENV['SLACK_API_TOKEN'] = @token if @token
+    ENV['SLACK_API_TOKEN'] = @old_token if @old_token
   end
 
   context 'iniitalize' do
     it 'requires a token' do
-      client = SlackBotManager::Client.new('xoxb-abc123def456')
-      expect(client.token).to eq 'xoxb-abc123def456'
+      client = SlackBotManager::Client.new(@token)
+      expect(client.token).to eq @token
     end
     it 'be disconnected' do
-      client = SlackBotManager::Client.new('xoxb-abc123def456')
+      client = SlackBotManager::Client.new(@token)
       expect(client.status).to eq :disconnected
     end
   end
@@ -70,7 +71,7 @@ RSpec.describe SlackBotManager::Client, vcr: { cassette_name: 'web/rtm_start' } 
 
       it 'as post message with attachments' do
         client.connect
-        client.message('C123ABC', 'Hello!', attachments: [{title: 'Hello!', text: 'abc'}])
+        client.message('C123ABC', 'Hello!', attachments: [{ title: 'Hello!', text: 'abc' }])
       end
     end
 

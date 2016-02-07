@@ -75,7 +75,8 @@ module SlackBotManager
       unassign_event(evt)
     end
 
-    def message(channel, text=nil, *args)
+    def message(channel, text = nil, *args)
+      return false unless connection
       options = args.extract_options!
       if options.keys.length > 0
         connection.web_client.chat_postMessage(options.merge(channel: channel, text: text))
@@ -83,14 +84,16 @@ module SlackBotManager
         connection.message(options.merge(channel: channel, text: text))
       end
     end
-    alias_method :send_message, :message
+    alias send_message message
 
     def typing(channel, *args)
+      return false unless connection
       options = args.extract_options!
       connection.typing(options.merge(channel: channel))
     end
 
     def ping(*args)
+      return false unless connection
       options = args.extract_options!
       connection.ping(options)
     end

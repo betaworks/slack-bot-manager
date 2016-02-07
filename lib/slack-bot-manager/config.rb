@@ -11,13 +11,13 @@ module SlackBotManager
       :storage_adapter,
       :logger,
       :log_level,
-      :verbose,
+      :verbose
     ].freeze
 
     MANAGER_ATTRIBUTES = ([
       :tokens_key,
       :teams_key,
-      :check_interval,
+      :check_interval
     ] + GLOBAL_ATTRIBUTES).freeze
 
     CLIENT_ATTRIBUTES = ([

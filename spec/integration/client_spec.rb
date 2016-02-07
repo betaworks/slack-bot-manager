@@ -46,16 +46,20 @@ RSpec.describe 'client integration test', skip: !ENV['SLACK_API_TOKEN'] && 'miss
       # On hello, say hello
       conn.on :hello do |_|
         channel = client_channels.keys.first
-        send_message(channel, hello)
+        message(channel, hello)
       end
 
       # Disconnect if message is not hello
       conn.on :message do |_|
+        channel = client_channels.keys.first
+        typing(channel)
+        sleep 2
+        message(channel, 'Bye!')
         disconnect
       end
 
       conn.connect
-      sleep 3
+      sleep 5
       fail if conn.connected?
     end
   end
