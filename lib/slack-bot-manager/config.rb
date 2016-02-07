@@ -2,22 +2,27 @@ module SlackBotManager
   module Config
     extend self
 
-    MANAGER_ATTRIBUTES = [
+    READONLY_ATTRIBUTES = [
+      :storage
+    ].freeze
+
+    GLOBAL_ATTRIBUTES = [
+      :storage_options,
+      :storage_adapter,
+      :logger,
+      :log_level,
+      :verbose,
+    ].freeze
+
+    MANAGER_ATTRIBUTES = ([
       :tokens_key,
       :teams_key,
       :check_interval,
-      :storage_method,
-      :storage_options,
-      :logger,
-      :log_level,
-      :verbose
-    ].freeze
+    ] + GLOBAL_ATTRIBUTES).freeze
 
-    CLIENT_ATTRIBUTES = [
-      :logger,
-      :log_level,
-      :verbose
-    ].freeze
+    CLIENT_ATTRIBUTES = ([
+      # n/a
+    ] + GLOBAL_ATTRIBUTES).freeze
 
     WEB_CLIENT_ATTRIBUTES = [
       :user_agent,
@@ -43,8 +48,10 @@ module SlackBotManager
       :bots
     ].freeze
 
+    attr_accessor :storage
     attr_accessor(*Config::MANAGER_ATTRIBUTES)
     attr_accessor(*Config::CLIENT_ATTRIBUTES)
+    attr_accessor(*Config::READONLY_ATTRIBUTES)
     attr_accessor(*Config::WEB_CLIENT_ATTRIBUTES)
     attr_accessor(*Config::RTM_CLIENT_ATTRIBUTES)
 
@@ -53,15 +60,23 @@ module SlackBotManager
       Slack::Web::Config.reset
       Slack::RealTime::Config.reset
 
+      # Token storage options
+      self.storage = nil
+      self.storage_options = {}
+      self.storage_adapter = method(:detect_storage_adapter)
+
+      # Token options
       self.tokens_key = 'tokens:statuses'
       self.teams_key = 'tokens:teams'
-      self.check_interval = 5 # seconds
-      self.storage_method = method(:detect_storage_method)
-      self.storage_options = {}
+
+      # Logger options
       self.logger = defined?(Rails) ? Rails.logger : ::Logger.new(STDOUT)
       self.log_level = ::Logger::INFO
       self.logger.formatter = SlackBotManager::Logger::Formatter.new
       self.verbose = false
+
+      # Connection options
+      self.check_interval = 5 # seconds
       self.user_agent = "Slack Bot Manager/#{SlackBotManager::VERSION} <https://github.com/betaworks/slack-bot-manager>"
     end
 
@@ -83,8 +98,21 @@ module SlackBotManager
       end
     end
 
-    def storage_method
-      (val = @storage_method).respond_to?(:call) ? val.call : val
+    def storage_adapter
+      (val = @storage_adapter).respond_to?(:call) ? val.call : val
+    end
+
+    def storage_adapter=(val)
+      # return if self.storage.present? && val == @storage_adapter
+      @storage_adapter = val
+      self.storage = @storage_adapter.present? ? storage_adapter.new(self.storage_options) : nil
+    end
+
+    def storage_options=(val)
+      # return if val == @storage_options
+      @storage_options = val
+      self.storage = nil
+      self.storage_adapter = @storage_adapter # Re-initialize
     end
 
     def verbose=(val)
@@ -111,10 +139,10 @@ module SlackBotManager
 
     private
 
-    def detect_storage_method
-      [:Redis, :Dalli].each do |storage_method|
+    def detect_storage_adapter
+      [:Redis, :Dalli].each do |storage_adapter|
         begin
-          return SlackBotManager::Storage.const_get(storage_method)
+          return SlackBotManager::Storage.const_get(storage_adapter)
         rescue LoadError, NameError
           false
         end

@@ -6,6 +6,7 @@ module SlackBotManager
 
     attr_accessor :commands, :connection, :id, :token, :status
     attr_accessor(*Config::CLIENT_ATTRIBUTES)
+    attr_accessor(*Config::READONLY_ATTRIBUTES)
 
     def initialize(token, *args)
       options = args.extract_options!
@@ -22,6 +23,7 @@ module SlackBotManager
       SlackBotManager::Config::CLIENT_ATTRIBUTES.each do |key|
         send("#{key}=", options[key] || SlackBotManager.config.send(key))
       end
+      self.storage = SlackBotManager.config.send(:storage)
 
       # Assign commands
       methods.each do |n|
@@ -73,12 +75,24 @@ module SlackBotManager
       unassign_event(evt)
     end
 
-    def send_message(channel, text, *args)
+    def message(channel, text=nil, *args)
       options = args.extract_options!
-      # TODO : HANDLE CASES WHERE NEED TO POST ATTACHMENTS, SEND DMs, ETC
-      options[:channel] = channel
-      options[:text] = text
-      connection.message(options)
+      if options.keys.length > 0
+        connection.web_client.chat_postMessage(options.merge(channel: channel, text: text))
+      else
+        connection.message(options.merge(channel: channel, text: text))
+      end
+    end
+    alias_method :send_message, :message
+
+    def typing(channel, *args)
+      options = args.extract_options!
+      connection.typing(options.merge(channel: channel))
+    end
+
+    def ping(*args)
+      options = args.extract_options!
+      connection.ping(options)
     end
 
     protected

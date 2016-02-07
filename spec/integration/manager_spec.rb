@@ -44,7 +44,7 @@ RSpec.describe 'manager integration test', skip: !ENV['SLACK_API_TOKEN'] && 'mis
       context store.to_s do
         before do
           SlackBotManager::Manager.configure do |config|
-            config.storage_method = SlackBotManager::Storage.const_get(store)
+            config.storage_adapter = SlackBotManager::Storage.const_get(store)
           end
         end
 

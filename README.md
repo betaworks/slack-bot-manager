@@ -134,7 +134,7 @@ setting           | description
 `tokens_key`      | Redis key name for where tokens' status are stored. _(default: tokens:statuses)_
 `teams_key`       | Redis key name for where teams' tokens are stored. _(default: tokens:teams)_
 `check_interval`  | Interval (in seconds) for checking connections and tokens status. _(default: 5)_
-`storage_method`  | Token storage method. _(default: nil)_
+`storage_adapter` | Token storage method. _(default: nil)_
 `storage_options` | Token storage method options. _(default: {})_
 `logger`          | Define the logger to use. _(default: Rails.logger or ::Logger.new(STDOUT))_
 `log_level`       | Explicity define the logger level. _(default: ::Logger::WARN)_
@@ -144,7 +144,7 @@ You can define these configuration options as:
 
 ```
 SlackBotManager::Manager.configure do |config|
-  config.storage_method = SlackBotManager::Storage::Redis
+  config.storage_adapter = SlackBotManager::Storage::Redis
   config.storage_options = {host: '0.0.0.0', port: 6379}
   config.check_interval = 10 # in seconds
 end

@@ -5,8 +5,9 @@ module SlackBotManager
     include Errors
     include Logger
 
-    attr_accessor :connections, :storage
+    attr_accessor :connections
     attr_accessor(*Config::MANAGER_ATTRIBUTES)
+    attr_accessor(*Config::READONLY_ATTRIBUTES)
 
     def initialize(*args)
       options = args.extract_options!
@@ -18,9 +19,7 @@ module SlackBotManager
       SlackBotManager::Config::MANAGER_ATTRIBUTES.each do |key|
         send("#{key}=", options[key] || SlackBotManager.config.send(key))
       end
-
-      # Set token storage method
-      @storage = storage_method.new(storage_options)
+      self.storage = SlackBotManager.config.send(:storage)
     end
 
     # Include config helpers

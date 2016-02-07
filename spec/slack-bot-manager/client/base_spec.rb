@@ -49,17 +49,39 @@ RSpec.describe SlackBotManager::Client, vcr: { cassette_name: 'web/rtm_start' } 
     end
   end
 
-  context 'send message' do
-    context 'should succeed' do
-      let(:client) { SlackBotManager::Client.new(@token) }
+  context 'should succeed' do
+    let(:client) { SlackBotManager::Client.new(@token) }
 
+    context 'send message' do
       it 'as socket message' do
         client.connect
-        puts client.send_message('C123ABC', 'Hello!').inspect
+        client.message('C123ABC', 'Hello!')
       end
 
-      it 'as post message'
-      it 'as post message with attachments'
+      it 'as socket message (send_message alias)' do
+        client.connect
+        client.send_message('C123ABC', 'Hello!')
+      end
+
+      it 'as post message' do
+        client.connect
+        client.message('C123ABC', 'Hello!', as_user: false, username: 'botbotbot')
+      end
+
+      it 'as post message with attachments' do
+        client.connect
+        client.message('C123ABC', 'Hello!', attachments: [{title: 'Hello!', text: 'abc'}])
+      end
+    end
+
+    it 'typing' do
+      client.connect
+      client.typing('C123ABC')
+    end
+
+    it 'ping' do
+      client.connect
+      client.ping
     end
   end
 
