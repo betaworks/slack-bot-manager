@@ -7,6 +7,3 @@
 [submodule "examples/botspotting"]
 	path = examples/botspotting
 	url = git@github.com:goosey/botspotting.git
-[submodule "examples/dm-bot"]
-	path = examples/dm-bot
-	url = git@github.com:gleuch/dm-bot.git
