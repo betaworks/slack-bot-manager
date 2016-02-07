@@ -22,6 +22,7 @@ module SlackBotManager
         if message =~ /\d/
           number = message.scan(/\d+/).first.to_i
         end
+
 				# Set emoji group
 				case
 				when message.include?("positive") || message.include?("happy") || message.include?("funny") || message.include?("lol") || message.include?(":)")
@@ -48,11 +49,10 @@ module SlackBotManager
 					group = "all" # default
 				end
 				Emoji.choose(group)
+
 				# Send message
-        send_message(Emoji.square(number), channel: data['channel'])
+        message(data['channel'], Emoji.square(number))
       end
-
     end
-
   end
 end
